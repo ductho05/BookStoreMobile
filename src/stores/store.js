@@ -3,6 +3,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage"
 import { persistStore, persistReducer } from "redux-persist"
 import userReducer from './userSlice'
 import dataReducer from './dataSlice'
+import productReducer from './productSlice'
 
 const persistConfig = {
     key: 'root',
@@ -15,7 +16,8 @@ const persistedReducer = persistReducer(persistConfig, userReducer)
 export const store = configureStore({
     reducer: {
         user: persistedReducer,
-        data: dataReducer
+        data: dataReducer,
+        product: productReducer
     },
     middleware: (getDefaultMiddleware) =>
         getDefaultMiddleware({

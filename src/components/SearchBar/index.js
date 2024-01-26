@@ -5,7 +5,12 @@ import IconFontAwesome from 'react-native-vector-icons/FontAwesome5'
 import SearchInput from '../SearchInput/index'
 import Skeleton from "@thevsstech/react-native-skeleton"
 
-const SearchBar = ({ scrollPosition }) => {
+const SearchBar = ({ scrollPosition, navigation }) => {
+
+    const handleToSearchProduct = () => {
+
+        navigation.navigate("SearchProduct")
+    }
 
     return (
         <View style={[styles.container, tw`w-full z-10 justify-center p-[10px] items-center ${scrollPosition > 0 ? "bg-[#C92127]" : "bg-transparent"}`]}>
@@ -21,7 +26,9 @@ const SearchBar = ({ scrollPosition }) => {
                         color="#999"
                     />
                 </TouchableOpacity>
-                <SearchInput />
+                <TouchableOpacity style={tw`flex-1`} onPress={handleToSearchProduct}>
+                    <SearchInput />
+                </TouchableOpacity>
             </View>
         </View>
     )

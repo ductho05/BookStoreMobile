@@ -33,6 +33,13 @@ const RenderGridList = (products) => {
 
 const ProductFrame = ({ isSlide, productList, title }) => {
 
+    const [currentTab, setCurrentTab] = React.useState(0)
+
+    const handleChangeTab = (index) => {
+
+        setCurrentTab(index)
+    }
+
     return (
         <View style={tw`mt-[10px] rounded-[12px] bg-white pb-[20px]`}>
             <View style={[tw`flex-row items-center p-[10px]`, { backgroundColor: PINK_COLOR }]}>
@@ -42,31 +49,32 @@ const ProductFrame = ({ isSlide, productList, title }) => {
                 </Text>
             </View>
             <View style={[tw`p-[10px] flex-row border-b`, { borderColor: BORDER_COLOR }]}>
-                {
-                    productList.map((category) => (
-                        <TouchableOpacity key={category.title}>
-                            <View style={[tw`px-[10px] rounded-[6px] py-[4px] border`, { borderColor: YELLOW_COLOR, width: 'max-content' }]}>
-                                <Text style={[tw``, { color: YELLOW_COLOR }]}>
-                                    {category.title}
+                <FlatList
+                    horizontal
+                    data={productList}
+                    keyExtractor={(item) => item.title}
+                    renderItem={({ item, index }) => (
+                        <TouchableOpacity onPress={() => handleChangeTab(index)}>
+                            <View style={[tw`px-[10px] mx-[10px] rounded-[6px] py-[4px] border`, { borderColor: `${currentTab === index ? YELLOW_COLOR : BORDER_COLOR}`, width: 'max-content' }]}>
+                                <Text style={[tw``, { color: `${currentTab === index ? YELLOW_COLOR : "#333"}` }]}>
+                                    {item.title}
                                 </Text>
                             </View>
                         </TouchableOpacity>
-                    ))
-                }
+                    )}
+                />
                 <View></View>
             </View>
             <View style={tw`py-[10px]`}>
-                <FlatList
-                    data={productList}
-                    keyExtractor={(item) => item.title}
-                    renderItem={({ item }) => (
-                        <View>
-                            {
-                                isSlide ? RenderSlideList(item.products) : RenderGridList(item.products)
-                            }
-                        </View>
-                    )}
-                />
+                <View>
+                    {
+                        isSlide
+                            ?
+                            RenderSlideList(productList[currentTab].products)
+                            :
+                            RenderGridList(productList[currentTab].products)
+                    }
+                </View>
             </View>
             <View style={tw`mx-[35%]`}>
                 <Button title="Xem thêm" type="line" size="small" />

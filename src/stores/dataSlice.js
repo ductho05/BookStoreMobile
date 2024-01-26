@@ -14,6 +14,18 @@ const dataSlice = createSlice({
     initialState,
     reducers: {
 
+        getProductHots: (state, action) => {
+
+            state.productsHots = [...state.productsHots, action.payload]
+        },
+        getProductCategory: (state, action) => {
+
+            state.categoryBooks = [...state.categoryBooks, action.payload]
+        },
+        getLearnBooks: (state, action) => {
+
+            state.learnBooks = [...state.learnBooks, action.payload]
+        }
     },
     extraReducers: (builder) => {
 
@@ -38,6 +50,6 @@ const dataSlice = createSlice({
     }
 })
 
-export const { } = dataSlice.actions
+export const { getProductHots, getProductCategory, getLearnBooks } = dataSlice.actions
 
 export default dataSlice.reducer
