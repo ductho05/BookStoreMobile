@@ -7,15 +7,22 @@ export default function Loading() {
     return (
         <View style={[StyleSheet.absoluteFillObject, styles.container]}>
             <View style={tw`w-full h-[40%] items-center`}>
-                <LottieView
-                    source={require('../../assets/jsons/Loading.json')}
-                    autoPlay={true}
-                    loop
-                    style={{ flexGrow: 1, width: '20%' }}
-                />
+                <Loader />
             </View>
 
         </View>
+    )
+}
+
+export const Loader = () => {
+
+    return (
+        <LottieView
+            source={require('../../assets/jsons/Loading.json')}
+            autoPlay={true}
+            loop
+            style={{ flexGrow: 1, width: '20%' }}
+        />
     )
 }
 

@@ -7,3 +7,12 @@ export const apiSearchProduct = async (keyword) => {
 
     return response
 }
+
+export const apiGetProduct = async (params) => {
+
+    const response = await axios.get(`${API_URL}/products`, {
+        params
+    })
+
+    return response
+}

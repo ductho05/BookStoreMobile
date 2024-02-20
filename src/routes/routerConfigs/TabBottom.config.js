@@ -1,8 +1,9 @@
-import Account from "../../screens/Account"
-import Cart from "../../screens/Cart"
-import Home from "../../screens/Home"
-import Notification from "../../screens/Notification"
-import Suggest from "../../screens/Suggest"
+import Home from "../../screens/public/Home"
+import Suggest from "../../screens/public/Suggest"
+import Account from "../../screens/user/Account"
+import Cart from "../../screens/user/Cart"
+import Notification from "../../screens/user/Notification"
+
 
 const TabBottomRouters = [
     {

@@ -14,15 +14,15 @@ export const fetchInitialData = createAsyncThunk(
         return {
             productsHots: [{
                 title: listPathHots[0].title,
-                products: [...productsHots.data.data]
+                products: productsHots.data.data
             }],
             categoryBooks: [{
                 title: listPathCategory[0].title,
-                products: [...categoryBooks.data.data]
+                products: categoryBooks.data.data
             }],
             learnBooks: [{
                 title: listPathLearn[0].title,
-                products: [...learnBooks.data.data]
+                products: learnBooks.data.data
             }],
             slideList: slideList.data.data
         }

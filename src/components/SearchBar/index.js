@@ -2,14 +2,19 @@ import { View, Text, Image, TouchableOpacity, StyleSheet, StatusBar } from 'reac
 import React from 'react'
 import tw from 'twrnc'
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5'
-import SearchInput from '../SearchInput/index'
 import Skeleton from "@thevsstech/react-native-skeleton"
+import SearchInput from '../SearchInput/index'
 
 const SearchBar = ({ scrollPosition, navigation }) => {
 
     const handleToSearchProduct = () => {
 
         navigation.navigate("SearchProduct")
+    }
+
+    const handleToCategory = () => {
+
+        navigation.push("Categories")
     }
 
     return (
@@ -19,7 +24,7 @@ const SearchBar = ({ scrollPosition, navigation }) => {
                 style={[tw`w-[60%] h-[40px] ${scrollPosition > 0 ? 'hidden' : ''}`, { objectFit: 'contain' }]}
             />
             <View style={tw`flex-row gap-[20px] px-[10px] my-[10px] w-full items-center`}>
-                <TouchableOpacity>
+                <TouchableOpacity onPress={handleToCategory}>
                     <IconFontAwesome
                         name="bars"
                         size={30}

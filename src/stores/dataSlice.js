@@ -37,13 +37,13 @@ const dataSlice = createSlice({
         builder.addCase(fetchInitialData.fulfilled, (state, action) => {
 
             state.loading = false
-            state.productsHots = action.payload.productsHots
-            state.categoryBooks = action.payload.categoryBooks
-            state.learnBooks = action.payload.learnBooks
-            state.slideList = action.payload.slideList
+            state.productsHots = action.payload.productsHots || []
+            state.categoryBooks = action.payload.categoryBooks || []
+            state.learnBooks = action.payload.learnBooks || []
+            state.slideList = action.payload.slideList || []
         })
 
-        builder.addCase(fetchInitialData.rejected, (state, action) => {
+        builder.addCase(fetchInitialData.rejected, (state) => {
 
             state.loading = false
         })

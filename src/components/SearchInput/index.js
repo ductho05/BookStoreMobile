@@ -6,13 +6,15 @@ import useDebounce from '../../hooks/useDebounce'
 import { useDispatch } from 'react-redux'
 import { search } from '../../stores/productSlice'
 import { apiSearchProduct } from '../../apis/product'
+import { getData, setData } from '../../utils/storage'
+import { HISTORY_KEY } from '../../constants/storageKey'
 
-const SearchInput = ({ isSearch }) => {
+const SearchInput = ({ isSearch, navigation, searchText }) => {
 
     const [keywords, setKeywords] = React.useState()
     const dispatch = useDispatch()
 
-    const keywordDebounce = useDebounce(keywords, 300)
+    const keywordDebounce = useDebounce(keywords, 400)
 
     const getSuggesttionProducts = async (keywords) => {
 
@@ -41,6 +43,29 @@ const SearchInput = ({ isSearch }) => {
 
     }, [keywordDebounce])
 
+    const handleSubmit = async () => {
+
+        if (keywordDebounce) {
+
+            const historySearch = await getData("history")
+
+            if (historySearch) {
+
+                const index = historySearch.findIndex(h => h === keywordDebounce)
+
+                if (index === -1) {
+
+                    historySearch.push(keywordDebounce)
+                    setData(HISTORY_KEY, historySearch)
+                }
+            } else {
+
+                setData(HISTORY_KEY, [keywordDebounce])
+            }
+            navigation.navigate("Product", { keywords: keywordDebounce })
+        }
+    }
+
     return (
         <View style={tw`flex-row flex-1 items-center bg-white px-[10px] py-[4px] rounded-[6px] border border-[#999]`}>
             <IconFontAwesome
@@ -57,9 +82,12 @@ const SearchInput = ({ isSearch }) => {
                         autoFocus={true}
                         value={keywords}
                         onChangeText={setKeywords}
+                        onSubmitEditing={handleSubmit}
                     />
                     :
-                    <Text style={tw`text-[#999] ml-[10px] py-[4px]`}>Nhập để tìm kiếm...</Text>
+                    <Text style={tw`text-[#999] ml-[10px] py-[4px]`}>
+                        {searchText ? searchText : "Nhập để tìm kiếm..."}
+                    </Text>
             }
         </View>
     )

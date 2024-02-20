@@ -1,10 +1,10 @@
 import { View, Text } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
-import Header from '../components/Header/index'
-import Button from '../components/Button/index'
+import Header from '../../components/Header/index'
+import Button from '../../components/Button/index'
 import { useSelector, useDispatch } from 'react-redux'
-import { logout } from '../stores/userSlice'
+import { logout } from '../../stores/userSlice'
 import Toast from 'react-native-toast-message'
 
 const Account = ({ navigation }) => {

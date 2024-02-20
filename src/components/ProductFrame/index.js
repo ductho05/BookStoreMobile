@@ -19,7 +19,7 @@ const RenderSlideList = (products) => {
     )
 }
 
-const RenderGridList = (products) => {
+export const RenderGridList = (products) => {
 
     return (
         <FlatList
@@ -42,12 +42,18 @@ const ProductFrame = ({ isSlide, productList, title }) => {
 
     return (
         <View style={tw`mt-[10px] rounded-[12px] bg-white pb-[20px]`}>
-            <View style={[tw`flex-row items-center p-[10px]`, { backgroundColor: PINK_COLOR }]}>
-                <Image style={tw`w-[20px] h-[20px]`} source={require('../../assets/images/icons/ico_dealhot.png')} />
-                <Text style={tw`ml-[6px] font-bold`}>
-                    {title}
-                </Text>
-            </View>
+            {
+                title
+                    ?
+                    <View style={[tw`flex-row items-center p-[10px]`, { backgroundColor: PINK_COLOR }]}>
+                        <Image style={tw`w-[20px] h-[20px]`} source={require('../../assets/images/icons/ico_dealhot.png')} />
+                        <Text style={tw`ml-[6px] font-bold`}>
+                            {title}
+                        </Text>
+                    </View>
+                    :
+                    <View></View>
+            }
             <View style={[tw`p-[10px] flex-row border-b`, { borderColor: BORDER_COLOR }]}>
                 <FlatList
                     horizontal
@@ -70,15 +76,21 @@ const ProductFrame = ({ isSlide, productList, title }) => {
                     {
                         isSlide
                             ?
-                            RenderSlideList(productList[currentTab].products)
+                            RenderSlideList(productList[currentTab]?.products || [])
                             :
-                            RenderGridList(productList[currentTab].products)
+                            RenderGridList(productList[currentTab]?.products || [])
                     }
                 </View>
             </View>
-            <View style={tw`mx-[35%]`}>
-                <Button title="Xem thêm" type="line" size="small" />
-            </View>
+            {
+                title
+                    ?
+                    <View style={tw`mx-[35%]`}>
+                        <Button title="Xem thêm" type="line" size="small" />
+                    </View>
+                    :
+                    <View></View>
+            }
         </View>
     )
 }

@@ -34,7 +34,6 @@ const TabAllStack = () => {
                         />
                     ))
                 }
-
             </Stack.Navigator>
         </NavigationContainer>
     )

@@ -7,7 +7,7 @@ import numeral from 'numeral'
 const ProductItem = ({ product, isSlide }) => {
 
     return (
-        <View style={[tw`p-[10px] border mb-[10px] mx-[5px] rounded-[6px] ${isSlide ? "w-[166px]" : "w-[47%]"}`, { borderColor: BORDER_COLOR }]}>
+        <View style={[tw`p-[10px] z-1 bg-white border mb-[10px] mx-[5px] rounded-[6px] ${isSlide ? "w-[166px]" : "w-[47%]"}`, { borderColor: BORDER_COLOR }]}>
             <View style={tw`w-full items-center`}>
                 <Image
                     source={{ uri: product.images }}
