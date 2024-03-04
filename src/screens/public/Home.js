@@ -69,7 +69,6 @@ const Home = ({ navigation }) => {
     React.useEffect(() => {
 
         if (!loading) {
-
             fetchData()
         }
     }, [loading])
