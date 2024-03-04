@@ -1,7 +1,7 @@
 
-// export const API_URL = 'https://bookstore-ta-v3.onrender.com/bookstore/api/v1'
+export const API_URL = 'https://bookstore-ta-v3.onrender.com/bookstore/api/v1'
 // export const API_URL = 'http://192.168.43.204:3000/bookstore/api/v1'
-export const API_URL = 'http://192.168.1.65:3000/bookstore/api/v1'
+// export const API_URL = 'http://192.168.1.65:3000/bookstore/api/v1'
 
 export const listPathHots = [
     {
@@ -15,6 +15,26 @@ export const listPathHots = [
     {
         title: 'Bán chạy nhất',
         path: '/bestseller/10',
+    },
+]
+
+
+export const listPathStatusOrder = [
+    {
+        title: 'Chờ xác nhận',
+        path: '0',
+    },
+    {
+        title: 'Đang giao',
+        path: '1',
+    },
+    {
+        title: 'Hoàn thành',
+        path: '2',
+    },
+    {
+        title: 'Đã hủy',
+        path: '3',
     },
 ]
 

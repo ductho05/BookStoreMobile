@@ -1,42 +1,55 @@
-import { NavigationContainer } from '@react-navigation/native';
-import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {createNativeStackNavigator} from '@react-navigation/native-stack';
 import TabAllRoutes from '../routerConfigs/TabAll.config';
-import { useDispatch } from 'react-redux';
+import {useDispatch, useSelector} from 'react-redux';
 import React from 'react';
-import { fetchInitialData } from '../../stores/asyncActions';
-
-const Stack = createNativeStackNavigator()
+import {useEffect} from 'react';
+import {fetchInitialData} from '../../stores/asyncActions';
+import {getAddressDelivery, getOrientation} from '../../stores/otherSlice';
+import {Dimensions} from 'react-native';
+const Stack = createNativeStackNavigator();
 
 const TabAllStack = () => {
+  const {token, user} = useSelector(state => state.user);
+  // const {orientation, addressDelivery} = useSelector(state => state.other);
+  const dispatch = useDispatch();
 
-    const dispatch = useDispatch()
+  // console.log('orientation', orientation, user, addressDelivery.length);
 
-    React.useEffect(() => {
+  useEffect(() => {
+    const onChange = ({window}) => {
+      const {width, height} = window;
+      dispatch(getOrientation(width > height ? 'landscape' : 'portrait'));
+    };
 
-        dispatch(fetchInitialData())
-    }, [])
+    Dimensions.addEventListener('change', onChange);
 
-    return (
-        <NavigationContainer>
-            <Stack.Navigator
-                initialRouteName={"TabBottom"}
-                screenOptions={{
-                    headerShown: false
-                }}
-            >
-                {
-                    TabAllRoutes.map(screen => (
+    return () => {
+      Dimensions.removeEventListener('change', onChange);
+    };
+  }, []);
 
-                        <Stack.Screen
-                            key={screen.name}
-                            name={screen.name}
-                            component={screen.component}
-                        />
-                    ))
-                }
-            </Stack.Navigator>
-        </NavigationContainer>
-    )
-}
+  React.useEffect(() => {
+    dispatch(fetchInitialData(token ? token + user?._id : null));
+  }, []);
 
-export default TabAllStack
+  return (
+    <NavigationContainer>
+      <Stack.Navigator
+        initialRouteName={'TabBottom'}
+        screenOptions={{
+          headerShown: false,
+        }}>
+        {TabAllRoutes.map(screen => (
+          <Stack.Screen
+            key={screen.name}
+            name={screen.name}
+            component={screen.component}
+          />
+        ))}
+      </Stack.Navigator>
+    </NavigationContainer>
+  );
+};
+
+export default TabAllStack;
