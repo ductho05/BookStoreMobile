@@ -12,6 +12,8 @@ import LottieView from 'lottie-react-native';
 import tw from 'twrnc';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
 import {useForm, Controller} from 'react-hook-form';
+import { addUserToCart } from '../../stores/cartSlice'
+
 import {
   BLUE_COLOR,
   PRIMARY_COLOR,
@@ -45,36 +47,39 @@ const Login = ({navigation}) => {
     setIsShowPassword(prev => !prev);
   };
 
-  const handleToForgotPassword = () => {
-    navigation.navigate('ForgotPassword');
-  };
+    const handleToForgotPassword = () => {
+        navigation.navigate('ForgotPassword')
+    }
 
-  const onSubmit = async data => {
-    setLoading(true);
-    axios
-      .post(`${API_URL}/users/login`, {...data})
-      .then(response => {
-        setLoading(false);
-        if (response.status == 200) {
-          dispatch(login(response.data));
+    const onSubmit = async (data) => {
 
-          Toast.show({
-            type: 'success',
-            text1: 'Đăng nhập tài khoản thành công!',
-          });
-          setTimeout(() => {
-            navigation.navigate('TabBottom');
-          }, 500);
-        }
-      })
-      .catch(error => {
-        setLoading(false);
-        Toast.show({
-          type: 'error',
-          text1: `Error: ${error.response.data.message}`,
-        });
-      });
-  };
+        setLoading(true)
+        axios.post(`${API_URL}/users/login`, { ...data })
+            .then(response => {
+                setLoading(false)
+                if (response.status == 200) {
+
+                    dispatch(login(response.data))
+                    dispatch(addUserToCart(response.data.data._id))
+
+                    Toast.show({
+                        type: 'success',
+                        text1: 'Đăng nhập tài khoản thành công!'
+                    })
+                    setTimeout(() => {
+                        navigation.navigate('TabBottom')
+                    }, 500)
+                }
+            })
+            .catch(error => {
+                setLoading(false)
+                Toast.show({
+                    type: 'error',
+                    text1: `Error: ${error.response.data.message}`
+                })
+            })
+
+    }
 
   return (
     <>

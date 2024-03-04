@@ -29,12 +29,7 @@ const TabBottomRouters = [
         label: 'Thông báo',
         tabIconLabel: 'info',
         iconName: 'bell',
-    },
-    {
-        screen: Cart,
-        label: 'Giỏ hàng',
-        tabIconLabel: 'cart-plus',
-        iconName: 'cart-plus'
+        badge: 'notification'
     }
 ]
 

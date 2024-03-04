@@ -1,15 +1,16 @@
-import ForgotPassword from '../../screens/auth/ForgotPassword';
-import Login from '../../screens/auth/Login';
-import Register from '../../screens/auth/Register';
-import Categories from '../../screens/public/Categories';
-import Product from '../../screens/public/Product';
-import SearchProduct from '../../screens/public/SearchProduct';
+import ForgotPassword from "../../screens/auth/ForgotPassword"
+import Login from "../../screens/auth/Login"
+import Register from "../../screens/auth/Register"
+import Categories from "../../screens/public/Categories"
+import Product from "../../screens/public/Product"
+import ProductDetail from "../../screens/public/ProductDetail"
+import ProductInfo from "../../screens/public/ProductInfo"
+import SearchProduct from "../../screens/public/SearchProduct"
+import TabBottom from "../routerRenders/TabBottom"
 import Favorite from '../../screens/user/Favorite';
-import TabBottom from '../routerRenders/TabBottom';
 import Voucher from '../../screens/user/Voucher';
 import Language from '../../screens/public/Language';
 import MyOrder from '../../screens/user/MyOrder';
-import Test from '../../components/CustomFlatList';
 import Support from '../../screens/public/Support';
 import Contact from '../../screens/public/Support/screen/Contact';
 import DeliveryMethod from '../../screens/public/Support/screen/DeliveryMethod';
@@ -110,7 +111,15 @@ const TabAllRoutes = [
   {
     name: 'GuessName',
     component: GuessName,
-  }
+  },
+  {
+    name: 'ProductDetail',
+    component: ProductDetail
+},
+{
+    name: 'ProductInfo',
+    component: ProductInfo
+}
 ];
 
 export default TabAllRoutes;

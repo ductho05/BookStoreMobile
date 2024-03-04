@@ -1,13 +1,22 @@
-import { View, Text, Image } from 'react-native'
+import { View, Text, Image, TouchableOpacity } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
 import { BORDER_COLOR, PRIMARY_COLOR } from '../../styles/color.global'
 import numeral from 'numeral'
+import { useNavigation } from '@react-navigation/native'
 
 const ProductItem = ({ product, isSlide }) => {
 
+    const navigation = useNavigation()
+
+    const handleToDetail = () => {
+        navigation.navigate('ProductDetail', {
+            productId: product._id,
+        })
+    }
+
     return (
-        <View style={[tw`p-[10px] z-1 bg-white border mb-[10px] mx-[5px] rounded-[6px] ${isSlide ? "w-[166px]" : "w-[47%]"}`, { borderColor: BORDER_COLOR }]}>
+        <TouchableOpacity onPress={handleToDetail} style={[tw`p-[10px] z-1 bg-white border mb-[10px] mx-[5px] rounded-[6px] ${isSlide ? "w-[166px]" : "w-[47%]"}`, { borderColor: BORDER_COLOR }]}>
             <View style={tw`w-full items-center`}>
                 <Image
                     source={{ uri: product.images }}
@@ -27,7 +36,7 @@ const ProductItem = ({ product, isSlide }) => {
                 </Text>
                 <View style={[tw`ml-[6px] px-[6px] rounded-[4px]`, { backgroundColor: PRIMARY_COLOR }]}>
                     <Text style={tw`text-white text-[13px]`}>
-                        -{(product.old_price / product.price).toFixed(0)} %
+                        -{(((product?.old_price - product?.price) / product?.old_price).toFixed(2)) * 100} %
                     </Text>
                 </View>
             </View>
@@ -42,7 +51,7 @@ const ProductItem = ({ product, isSlide }) => {
                     {product.sold}
                 </Text>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

@@ -19,7 +19,7 @@ const Header = ({title, navigation}) => {
         <TouchableOpacity
           onPress={handleGoBack}
           style={tw`w-[50px] h-[50px] justify-center items-start`}>
-          <IconFontAwesome name="arrow-left" size={16} color="#fff" />
+          <IconFontAwesome name="arrow-left" size={20} color="#fff" />
         </TouchableOpacity>
       )}
       <Text style={tw`font-bold flex-1 text-center text-white text-[16px]`}>

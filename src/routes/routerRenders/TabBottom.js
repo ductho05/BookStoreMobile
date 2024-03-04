@@ -1,3 +1,4 @@
+import React from 'react';
 import {createBottomTabNavigator} from '@react-navigation/bottom-tabs';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 import {Text, Dimensions} from 'react-native';
@@ -7,40 +8,21 @@ import {PRIMARY_COLOR} from '../../styles/color.global';
 import {useState, useEffect} from 'react';
 // import {getAllMyOrder} from '../../stores/dataSlice';
 import {useSelector, useDispatch} from 'react-redux';
+import Cart from '../../screens/user/Cart';
+
 const Tab = createBottomTabNavigator();
 
+// key: cart, notification
 const TabBottom = ({navigation}) => {
-  // Check hướng điện thoại
   const {orientation} = useSelector(state => state.other);
-  // const {allMyOrder} = useSelector(state => state.data);
-  // const dispatch = useDispatch();
 
-  // useEffect(() => {
-  //   const onChange = ({window}) => {
-  //     const {width, height} = window;
-  //     setOrientation(width > height ? 'landscape' : 'portrait');
-  //   };
+  const {user} = useSelector(state => state.user);
+  const cart = useSelector(state => state.cart);
+  const [cartData, setCartData] = React.useState([]);
 
-  //   Dimensions.addEventListener('change', onChange);
-
-  //   return () => {
-  //     Dimensions.removeEventListener('change', onChange);
-  //   };
-  // }, []);
-
-  // // Xóa bớt đơn hàng khi chuyển sang màn hình khác
-  // useEffect(() => {
-  //   const unsubscribe = navigation.addListener('focus', () => {
-  //     console.log('focus1', allMyOrder.length);
-  //     dispatch(getAllMyOrder(allMyOrder.slice(0, 10)));
-  //     console.log('focus2', allMyOrder.length);
-  //   });
-
-  //   return () => {
-  //     // Hủy đăng ký lắng nghe khi component unmount
-  //     unsubscribe();
-  //   };
-  // }, [navigation]);
+  React.useEffect(() => {
+    setCartData(cart[user._id]);
+  }, [cart]);
 
   return (
     <Tab.Navigator
@@ -80,9 +62,7 @@ const TabBottom = ({navigation}) => {
               tabBarLabel: ({focused}) => {
                 return (
                   <Text
-                    style={tw`${focused ? 'text-[#C92127]' : 'text-[#666]'} ${
-                      orientation != 'portrait' ? `ml-3` : `ml-0`
-                    }`}>
+                    style={tw`${focused ? 'text-[#C92127]' : 'text-[#666]'}`}>
                     {label}
                   </Text>
                 );
