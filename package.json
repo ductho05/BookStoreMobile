@@ -28,6 +28,7 @@
     "react-native-check-box": "^2.1.7",
     "react-native-gesture-handler": "^2.14.1",
     "react-native-linear-gradient": "^2.8.3",
+    "react-native-progress": "^5.0.1",
     "react-native-ratings": "^8.1.0",
     "react-native-reanimated-carousel": "^3.5.1",
     "react-native-render-html": "^6.3.4",

@@ -11,6 +11,7 @@ import { listPathCategory, listPathHots, listPathLearn } from '../../constants/i
 import { apiGetProductCategory, apiGetProductHots } from '../../apis/data'
 import { getLearnBooks, getProductCategory, getProductHots } from '../../stores/dataSlice'
 import SearchBar from '../../components/SearchBar/index'
+import ScrollToTop from '../../components/ScrollToTop/index'
 
 const Home = ({ navigation }) => {
 

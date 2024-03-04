@@ -4,6 +4,7 @@ import TabAllRoutes from '../routerConfigs/TabAll.config';
 import { useDispatch } from 'react-redux';
 import React from 'react';
 import { fetchInitialData } from '../../stores/asyncActions';
+import Cart from '../../screens/user/Cart';
 
 const Stack = createNativeStackNavigator()
 
@@ -26,7 +27,6 @@ const TabAllStack = () => {
             >
                 {
                     TabAllRoutes.map(screen => (
-
                         <Stack.Screen
                             key={screen.name}
                             name={screen.name}
@@ -34,6 +34,10 @@ const TabAllStack = () => {
                         />
                     ))
                 }
+                <Stack.Screen
+                    name='Cart'
+                    component={Cart}
+                />
             </Stack.Navigator>
         </NavigationContainer>
     )

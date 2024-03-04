@@ -14,7 +14,7 @@ const RenderSlideList = (products) => {
             pagingEnabled
             keyExtractor={(p) => p._id}
             data={products}
-            renderItem={({ item }) => <ProductItem isSlide product={item} />}
+            renderItem={({ item }) => <ProductItem key={item._id} isSlide product={item} />}
         />
     )
 }
@@ -54,7 +54,7 @@ const ProductFrame = ({ isSlide, productList, title }) => {
                     :
                     <View></View>
             }
-            <View style={[tw`p-[10px] flex-row border-b`, { borderColor: BORDER_COLOR }]}>
+            <View style={[tw`py-[10px] flex-row border-b`, { borderColor: BORDER_COLOR }]}>
                 <FlatList
                     horizontal
                     data={productList}
@@ -117,7 +117,7 @@ const Loading = () => {
                 <FlatList
                     numColumns={2}
                     keyExtractor={(item) => item}
-                    data={[1, 2, 3, 4, 5, 6, 7, 8, 9, 10]}
+                    data={[1, 2, 3, 4]}
                     renderItem={() => (
                         <Skeleton>
                             <Skeleton.Item

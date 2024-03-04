@@ -18,7 +18,7 @@ const Header = ({ title, navigation }) => {
                 <TouchableOpacity onPress={handleGoBack}>
                     <IconFontAwesome
                         name="arrow-left"
-                        size={16}
+                        size={20}
                         color="#fff"
                     />
                 </TouchableOpacity>

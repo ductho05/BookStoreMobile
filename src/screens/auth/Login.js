@@ -12,6 +12,7 @@ import Toast from 'react-native-toast-message'
 import { API_URL } from '../../constants/index'
 import axios from 'axios'
 import { login } from '../../stores/userSlice'
+import { addUserToCart } from '../../stores/cartSlice'
 
 const Login = ({ navigation }) => {
 
@@ -47,6 +48,7 @@ const Login = ({ navigation }) => {
                 if (response.status == 200) {
 
                     dispatch(login(response.data))
+                    dispatch(addUserToCart(response.data.data._id))
 
                     Toast.show({
                         type: 'success',
@@ -59,6 +61,7 @@ const Login = ({ navigation }) => {
             })
             .catch(error => {
                 setLoading(false)
+                console.log(error)
                 Toast.show({
                     type: 'error',
                     text1: `Error: ${error.response.data.message}`

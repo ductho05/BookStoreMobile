@@ -88,7 +88,7 @@ const SearchProduct = ({ navigation }) => {
                 {
                     keywords
                         ?
-                        <View style={tw`pt-[20px]`}>
+                        <View style={tw`pt-[20px] pb-[40px]`}>
                             <View style={tw`flex-row items-center`}>
                                 <Text style={tw`text-[16px] font-bold flex-1 text-[#333]`}>Gợi ý</Text>
 
