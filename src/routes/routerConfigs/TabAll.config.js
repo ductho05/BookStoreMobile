@@ -22,6 +22,10 @@ import DeliveryAddress from '../../screens/user/DeliveryAddress';
 import AddDeliveryAddress from '../../screens/user/AddDeliveryAddress';
 import TASHunting from '../../screens/user/TASHunting';
 import GuessName from '../../screens/user/TASHunting/game/GuessName';
+import AuthenticateOTP from "../../screens/auth/AuthenticateOTP"
+import EditProfile from "../../screens/user/EditProfile"
+import ChangePassword from "../../screens/user/ChangePassword"
+import AuthenChangeEmail from "../../screens/user/AuthenChangeEmail"
 
 const TabAllRoutes = [
   {
@@ -115,11 +119,27 @@ const TabAllRoutes = [
   {
     name: 'ProductDetail',
     component: ProductDetail
-},
-{
+  },
+  {
     name: 'ProductInfo',
     component: ProductInfo
-}
+  },
+  {
+    name: 'AuthenticateOTP',
+    component: AuthenticateOTP
+  },
+  {
+    name: 'EditProfile',
+    component: EditProfile
+  },
+  {
+    name: 'ChangePassword',
+    component: ChangePassword
+  },
+  {
+    name: 'AuthenChangeEmail',
+    component: AuthenChangeEmail
+  }
 ];
 
 export default TabAllRoutes;

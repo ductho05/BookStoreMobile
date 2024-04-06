@@ -1,6 +1,6 @@
-import {configureStore} from '@reduxjs/toolkit';
+import { configureStore } from '@reduxjs/toolkit';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {persistStore, persistReducer} from 'redux-persist';
+import { persistStore, persistReducer } from 'redux-persist';
 import userReducer from './userSlice';
 import dataReducer from './dataSlice';
 import cartReducer from './cartSlice';
@@ -10,12 +10,12 @@ import productReducer from './productSlice';
 const persistConfig = {
   key: 'root',
   storage: AsyncStorage,
-  whitelist: ['token', 'user', 'isLoggedIn'],
+  whitelist: ['token', 'user', 'isLoggedIn', 'numNewNotice'],
 };
 
 const persistCartConfig = {
-  key: 'root',
-  storage: AsyncStorage,
+  key: 'root3',
+  storage: AsyncStorage
 };
 
 const persistConfig2 = {
@@ -26,6 +26,7 @@ const persistConfig2 = {
 
 const persistedReducer = persistReducer(persistConfig, userReducer);
 const persistedReducer2 = persistReducer(persistConfig2, otherSlice);
+const persistedReducer3 = persistReducer(persistCartConfig, cartReducer);
 
 // tải lại mỗi khi mở app
 export const store = configureStore({
@@ -34,7 +35,7 @@ export const store = configureStore({
     data: dataReducer,
     other: persistedReducer2,
     product: productReducer,
-    cart: persistReducer(persistCartConfig, cartReducer),
+    cart: persistedReducer3,
   },
   middleware: getDefaultMiddleware =>
     getDefaultMiddleware({

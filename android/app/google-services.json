@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "790393831009",
+    "project_id": "mobileappbookstore",
+    "storage_bucket": "mobileappbookstore.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:790393831009:android:512039c843cb0d2590b420",
+        "android_client_info": {
+          "package_name": "com.tabookstore"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCsB3P7i7wq2KifYzmH6DDP_cV6VDmkRbQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

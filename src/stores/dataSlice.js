@@ -1,5 +1,5 @@
-import {createSlice} from '@reduxjs/toolkit';
-import {fetchInitialData} from './asyncActions';
+import { createSlice } from '@reduxjs/toolkit';
+import { fetchInitialData } from './asyncActions';
 
 const initialState = {
   productsHots: [],
@@ -14,6 +14,8 @@ const initialState = {
   cancelMyOrder: [],
   allMyOrder: [],
   loading: true,
+  categories: [],
+  notifications: []
 };
 
 const dataSlice = createSlice({
@@ -50,6 +52,14 @@ const dataSlice = createSlice({
     getAllMyOrder: (state, action) => {
       state.allMyOrder = action.payload;
     },
+    updateFavorites: (state, action) => {
+
+      state.favorites = [...state.favorites, action.payload]
+    },
+    getNotification: (state, action) => {
+
+      state.notifications = action.payload
+    }
   },
   extraReducers: builder => {
     builder.addCase(fetchInitialData.pending, state => {
@@ -57,6 +67,7 @@ const dataSlice = createSlice({
     });
 
     builder.addCase(fetchInitialData.fulfilled, (state, action) => {
+      console.log("data", action.payload)
       state.loading = false;
       state.productsHots = action.payload.productsHots || [];
       state.categoryBooks = action.payload.categoryBooks || [];
@@ -69,6 +80,7 @@ const dataSlice = createSlice({
       state.completeMyOrder = action.payload.completeMyOrder || [];
       state.cancelMyOrder = action.payload.cancelMyOrder || [];
       state.allMyOrder = action.payload.allMyOrder || [];
+      state.categories = action.payload.categories || [];
     });
 
     builder.addCase(fetchInitialData.rejected, state => {
@@ -88,6 +100,8 @@ export const {
   getCompleteMyOrder,
   getCancelMyOrder,
   getAllMyOrder,
+  updateFavorites,
+  getNotification
 } = dataSlice.actions;
 
 export default dataSlice.reducer;

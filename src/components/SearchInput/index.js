@@ -62,7 +62,7 @@ const SearchInput = ({ isSearch, navigation, searchText }) => {
 
                 setData(HISTORY_KEY, [keywordDebounce])
             }
-            navigation.navigate("Product", { keywords: keywordDebounce })
+            navigation.navigate("Product", { keywords: keywordDebounce, categoryId: null })
         }
     }
 

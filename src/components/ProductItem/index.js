@@ -36,7 +36,7 @@ const ProductItem = ({ product, isSlide }) => {
                 </Text>
                 <View style={[tw`ml-[6px] px-[6px] rounded-[4px]`, { backgroundColor: PRIMARY_COLOR }]}>
                     <Text style={tw`text-white text-[13px]`}>
-                        -{(((product?.old_price - product?.price) / product?.old_price).toFixed(2)) * 100} %
+                        -{(((product?.old_price - product?.price) / product?.old_price) * 100).toFixed(0)} %
                     </Text>
                 </View>
             </View>

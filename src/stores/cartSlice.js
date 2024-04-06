@@ -1,7 +1,7 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 const initialState = {
-
+    data: {}
 }
 
 const cartSlice = createSlice({
@@ -11,52 +11,62 @@ const cartSlice = createSlice({
 
         addUserToCart: (state, action) => {
             const userId = action.payload
-            state[userId] = []
+            state.data[userId] = []
         },
 
         remove: (state, action) => {
             const { userId, productId } = action.payload
-            const newList = state[userId].filter(cart => cart.product._id !== productId)
-            state[userId] = [...newList]
+            const cartData = state.data[userId]
+            const newList = cartData.filter(cart => cart.product._id !== productId)
+            state.data[userId] = [...newList]
         },
 
         add: (state, action) => {
 
-            const { userId } = action.payload
-            const cartData = state[userId]
-            const index = cartData.findIndex((item) => item.product._id === action.payload.data.product._id)
+            const { userId, data } = action.payload
+            if (state.data.hasOwnProperty(userId)) {
 
-            if (index !== -1) {
-                cartData[index].quantity += action.payload.data.quantity
+                const cartData = state.data[userId]
+                const findProductIndex = cartData?.findIndex(item =>
+                    item.product._id === data.product._id)
+
+                if (findProductIndex !== -1) {
+
+                    cartData[findProductIndex].quantity += data.quantity
+                } else {
+
+                    cartData.push(data)
+                }
+
+                state.data[userId] = [...cartData]
+
             } else {
-
-                cartData.push(action.payload.data)
+                state.data[userId] = [data]
             }
 
-            state[userId] = [...cartData]
+            //state.data = {}
         },
 
         minusQuantity: (state, action) => {
 
             const { userId, productId } = action.payload
-            const index = state[userId].findIndex(cart => cart.product._id === productId)
-            const cartUpdate = state[userId]
-            if (cartUpdate[index].quantity > 0) {
-                cartUpdate[index].quantity -= 1
-            }
+            const cartData = state.data[userId]
+            const productIndex = cartData.findIndex(cart => cart.product._id === productId)
 
-            state[userId] = [...cartUpdate]
+            if (cartData[productIndex].quantity > 1) {
+
+                cartData[productIndex].quantity -= 1
+                state.data[userId] = [...cartData]
+            }
         },
 
         plusQuantity: (state, action) => {
             const { userId, productId } = action.payload
-            const index = state[userId].findIndex(cart => cart.product._id === productId)
-            const cartUpdate = state[userId]
-            if (cartUpdate[index].quantity > 0) {
-                cartUpdate[index].quantity += 1
-            }
+            const cartData = state.data[userId]
+            const productIndex = cartData.findIndex(cart => cart.product._id === productId)
+            cartData[productIndex].quantity += 1
 
-            state[userId] = [...cartUpdate]
+            state.data[userId] = [...cartData]
         }
 
     }
