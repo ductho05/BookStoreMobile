@@ -23,13 +23,6 @@ const TabBottomRouters = [
         label: 'Gợi ý',
         tabIconLabel: 'lightbulb',
         iconName: 'lightbulb',
-    },
-    {
-        screen: Notification,
-        label: 'Thông báo',
-        tabIconLabel: 'info',
-        iconName: 'bell',
-        badge: 'notification'
     }
 ]
 

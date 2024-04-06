@@ -44,7 +44,7 @@ const SearchProduct = ({ navigation }) => {
 
     const handleSearch = (item) => {
 
-        navigation.navigate("Product", { keywords: item })
+        navigation.navigate("Product", { keywords: item, categoryId: null })
     }
 
     const handleRandom = () => {
@@ -110,7 +110,7 @@ const SearchProduct = ({ navigation }) => {
                         :
                         <View style={tw`pt-[20px]`}>
                             {
-                                historySearch.length > 0
+                                historySearch?.length > 0
                                     ?
                                     <>
                                         <View style={tw`flex-row items-center`}>
@@ -124,7 +124,7 @@ const SearchProduct = ({ navigation }) => {
                                             </TouchableOpacity>
                                         </View>
                                         {
-                                            historySearch.map(history => (
+                                            historySearch?.map(history => (
                                                 <View
                                                     key={history}
                                                     style={tw`flex-row items-center py-[14px] border-b border-[#C8C2C2]`}

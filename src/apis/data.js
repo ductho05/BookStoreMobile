@@ -1,7 +1,7 @@
 import axios from 'axios';
-import {API_URL} from '../constants/index';
-import {useSelector} from 'react-redux';
-import {getAuthInstance} from '../utils/storage';
+import { API_URL } from '../constants/index';
+import { useSelector } from 'react-redux';
+import { getAuthInstance } from '../utils/storage';
 // const authInstance = getAuthInstance();
 export const apiGetProductHots = async path => {
   const response = await axios.get(`${API_URL}/products${path}`);
@@ -71,14 +71,13 @@ export const apiGetStatusOrderForMe = async token => {
   const user = token.slice(-24);
   try {
     const response = await getAuthInstance(tok).post(
-      `/orders/filter?status=${
-        path == '0'
-          ? 'CHOXACNHAN'
-          : path == '1'
+      `/orders/filter?status=${path == '0'
+        ? 'CHOXACNHAN'
+        : path == '1'
           ? 'DANGGIAO'
           : path == '2'
-          ? 'HOANTHANH'
-          : 'DAHUY'
+            ? 'HOANTHANH'
+            : 'DAHUY'
       }&user=${user}&page=${page}&limit=10`,
     );
     // console.log('response221', response.data.data);
@@ -119,3 +118,33 @@ export const apiGetSlideList = async () => {
 
   return response;
 };
+
+export const apiAddFavorite = async (token, data) => {
+
+  try {
+    const response = await getAuthInstance(token).post(`/favorites/add`, data);
+
+    return response;
+  } catch (error) {
+    console.error('Error add favorites:', error);
+    throw error;
+  }
+}
+
+export const apiGetAllCategory = async () => {
+
+  const response = await axios.get(`${API_URL}/categories`)
+
+  return response
+}
+
+export const apiGetNotification = async (token, id) => {
+  try {
+    const response = await getAuthInstance(token).post('/webpush/get', { id })
+
+    return response
+  } catch (error) {
+    console.error('Error get notification', error);
+    throw error;
+  }
+}

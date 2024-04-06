@@ -12,6 +12,9 @@ import { apiGetProductCategory, apiGetProductHots } from '../../apis/data'
 import { getLearnBooks, getProductCategory, getProductHots } from '../../stores/dataSlice'
 import SearchBar from '../../components/SearchBar/index'
 import ScrollToTop from '../../components/ScrollToTop/index'
+import notifee from '@notifee/react-native';
+import Button from '../../components/Button'
+import { useNotification } from '../../hooks/useNotification'
 
 const Home = ({ navigation }) => {
 
@@ -19,6 +22,7 @@ const Home = ({ navigation }) => {
     const { loading, productsHots, categoryBooks, slideList, learnBooks } = useSelector(state => state.data)
     const [scrollPosition, setScrollPosition] = React.useState(0)
     const dispatch = useDispatch()
+    const { displayNotification } = useNotification()
 
     const fetchData = async () => {
 
@@ -81,6 +85,19 @@ const Home = ({ navigation }) => {
         setScrollPosition(currentScrollPosition)
     }
 
+    const handleToProduct = () => {
+        navigation.navigate("Product", { keywords: null, categoryId: null })
+    }
+
+    const handleToCategoryProduct = (categoryId) => {
+        navigation.navigate("Product", { keywords: null, categoryId: categoryId })
+    }
+
+    const onDisplayNotification = async () => {
+
+        displayNotification("test", "Notifiction content")
+    }
+
     return (
         <View style={tw`mt-[${StatusBar.currentHeight}px]`}>
             {
@@ -111,19 +128,23 @@ const Home = ({ navigation }) => {
                                         }
                                     </Swiper>
                                     <View >
+                                        <Button title="show notification" onPress={onDisplayNotification} />
                                         <Categories.Categories />
                                         <ProductFrame.ProductFrame
                                             title="Sản phẩm được quan tâm"
                                             productList={productsHots}
+                                            onPress={handleToProduct}
                                         />
                                         <ProductFrame.ProductFrame
                                             title="Danh mục nổi bật"
                                             productList={categoryBooks}
                                             isSlide={true}
+                                            onPress={handleToProduct}
                                         />
                                         <ProductFrame.ProductFrame
                                             title="Đồ dùng học tập"
                                             productList={learnBooks}
+                                            onPress={handleToProduct}
                                         />
                                     </View>
                                 </>
@@ -138,7 +159,7 @@ const Home = ({ navigation }) => {
 const HomeLoading = () => {
 
     return (
-        <>
+        <View style={tw`items-center justify-center`}>
             <SearchBar.Loading />
 
             <FlatList
@@ -147,7 +168,7 @@ const HomeLoading = () => {
                 renderItem={() => (
                     <>
                         <HomeHero.Loading />
-                        <View>
+                        <View style={tw`justify-center`}>
                             <Categories.Loading />
                             <ProductFrame.Loading />
                             <ProductFrame.Loading />
@@ -155,7 +176,7 @@ const HomeLoading = () => {
                     </>
                 )}
             />
-        </>
+        </View>
     )
 }
 

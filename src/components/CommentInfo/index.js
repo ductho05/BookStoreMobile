@@ -21,11 +21,11 @@ const CommentInfo = ({ stattisticRate, rate, comments }) => {
                     <View>
                         {
                             stattisticRate?.rate?.map((item, index) => (
-                                <View style={tw`pb-[6px] flex-row items-center gap-[8px]`}>
+                                <View key={index} style={tw`pb-[6px] flex-row items-center gap-[8px]`}>
                                     <Text style={tw`text-[13px] text-[#333]`}>{index + 1} sao</Text>
                                     <Progress.Bar
                                         key={index}
-                                        progress={stattisticRate?.total != 0 ? (item / stattisticRate?.total).toFixed(1) : 0}
+                                        progress={stattisticRate?.total != 0 ? parseFloat((item / stattisticRate?.total).toFixed(1)) : 0}
                                         borderWidth={0}
                                         color={STAR_COLOR}
                                         unfilledColor="#eee"

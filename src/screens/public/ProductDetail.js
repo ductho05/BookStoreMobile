@@ -1,4 +1,4 @@
-import { View, StatusBar, TouchableOpacity, Text, Image, StyleSheet, FlatList } from 'react-native'
+import { View, StatusBar, TouchableOpacity, Text, Image, StyleSheet, FlatList, ActivityIndicator } from 'react-native'
 import React from 'react'
 import tw from 'twrnc'
 import { BORDER_COLOR, PRIMARY_COLOR, YELLOW_COLOR } from '../../styles/color.global'
@@ -7,27 +7,56 @@ import { apiGetProductByCategory, apiGetProductById, apiGetProductComment, apiGe
 import { Rating } from 'react-native-ratings'
 import numeral from 'numeral'
 import { useSelector, useDispatch } from 'react-redux'
-import ProductFrame from '../../components/ProductFrame/index'
+import ProductFrame, { RenderSlideList } from '../../components/ProductFrame/index'
 import Skeleton from "@thevsstech/react-native-skeleton"
 import ProductInfo from '../../components/ProductInfo/index'
 import CommentInfo from '../../components/CommentInfo/index'
 import AddProductToCartBar from '../../components/AddProductToCartBar/index'
 import Toast from 'react-native-toast-message'
 import { add } from '../../stores/cartSlice'
+import Dialog from "react-native-dialog"
+import { apiAddFavorite } from '../../apis/data'
+import { updateFavorites } from '../../stores/dataSlice'
 
 const ProductDetail = ({ route, navigation }) => {
 
     const useRef = React.useRef()
     const { productId } = route.params
-    const { productsHots } = useSelector(state => state.data)
-    const { user } = useSelector(state => state.user)
+    const { productsHots, favorites } = useSelector(state => state.data)
+    const { user, isLoggedIn, token } = useSelector(state => state.user)
+    const { data } = useSelector(state => state.cart)
+    const [cartData, setCartData] = React.useState([])
     const dispatch = useDispatch()
     const [product, setProduct] = React.useState()
     const [rate, setRate] = React.useState()
     const [loading, setLoading] = React.useState(true)
     const [productCategory, setProductCategory] = React.useState([])
     const [comments, setComments] = React.useState([])
-    const [quantity, setQuantity] = React.useState(0)
+    const [quantity, setQuantity] = React.useState(1)
+    const [showDialog, setShowDialog] = React.useState(false)
+    const [isAddFavorite, setIsAddFavorite] = React.useState(false)
+
+    const checkIndex = () => {
+
+        if (cartData) {
+            const index = cartData.findIndex((item) => item.product._id === product._id)
+
+            if (index !== -1) {
+                if ((quantity + cartData[index].quantity) > product.quantity) {
+
+                    return false
+                }
+            }
+            return true
+        } else {
+            return true
+        }
+    }
+
+    React.useEffect(() => {
+
+        setCartData(data[user?._id])
+    }, [data])
 
     const handleGoBack = () => {
 
@@ -55,7 +84,7 @@ const ProductDetail = ({ route, navigation }) => {
 
     const handleMinus = () => {
 
-        setQuantity(prev => prev !== 0 ? prev - 1 : 0)
+        setQuantity(prev => prev !== 1 ? prev - 1 : 1)
     }
 
     const handlePlus = () => {
@@ -81,10 +110,11 @@ const ProductDetail = ({ route, navigation }) => {
 
     const handleAddToCart = () => {
 
-        if (quantity > 0) {
+        if (isLoggedIn) {
+
             if (product?.quantity !== 0) {
 
-                if (product?.quantity > quantity) {
+                if (product?.quantity >= quantity && checkIndex()) {
 
                     dispatch(add({
                         data: {
@@ -110,10 +140,7 @@ const ProductDetail = ({ route, navigation }) => {
                 })
             }
         } else {
-            Toast.show({
-                type: 'info',
-                text1: 'Vui lòng chọn số lượng sản phẩm!'
-            })
+            setShowDialog(true)
         }
     }
 
@@ -135,10 +162,7 @@ const ProductDetail = ({ route, navigation }) => {
 
         if (response.status === 200) {
 
-            setProductCategory([{
-                title: categoryName,
-                products: response.data.data
-            }])
+            setProductCategory(response.data.data)
         }
     }
 
@@ -162,22 +186,79 @@ const ProductDetail = ({ route, navigation }) => {
         }
     }
 
+    const onCancel = () => {
+
+        setShowDialog(false)
+    }
+
+    const onLogin = () => {
+
+        navigation.navigate('Login')
+    }
+
+    const checkFavorite = () => {
+
+        const index = favorites?.findIndex(favorites => favorites.productid._id === productId)
+
+        return index !== -1
+    }
+
+    const handleAddToMyFavorites = async () => {
+
+        if (!checkFavorite()) {
+
+            setIsAddFavorite(true)
+            const response = await apiAddFavorite(token, {
+                productid: productId,
+                userid: user?._id
+            })
+            setIsAddFavorite(false)
+
+            if (response.status === 200) {
+
+                dispatch(updateFavorites(response.data.data))
+                Toast.show({
+                    type: 'success',
+                    text1: 'Sản phẩm đã được thêm vào danh sách yêu thích'
+                })
+            }
+        }
+    }
+
     React.useEffect(() => {
 
         handleToTop()
         fetchProduct(productId)
         fetchRate(productId)
         fetchCommentList(productId)
-        setQuantity(0)
+        setQuantity(1)
     }, [productId])
 
     React.useEffect(() => {
 
-        fetchProductCategory(product?.categoryId?._id, product?.categoryId?.name)
+        if (product) {
+            fetchProductCategory(product?.categoryId?._id, product?.categoryId?.name)
+        }
     }, [product])
 
     return (
-        <View style={tw`relative mb-[50px]`}>
+        <View style={tw`relative mb-[50px] h-[100%]`}>
+            <Dialog.Container visible={showDialog}>
+                <Dialog.Title>Thông báo</Dialog.Title>
+                <Dialog.Description>
+                    Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!
+                </Dialog.Description>
+                <Dialog.Button label="Hủy" color="#666" bold={true} onPress={onCancel} />
+                <Dialog.Button label="Đăng nhập" color={PRIMARY_COLOR} bold={true} onPress={onLogin} />
+            </Dialog.Container>
+            {
+                isAddFavorite &&
+                <ActivityIndicator
+                    size="large"
+                    color={PRIMARY_COLOR}
+                    style={tw`absolute z-10000 bg-white mt-[80px] top-0 bottom-0 left-0 right-0 opacity-50`}
+                />
+            }
             <View style={[tw`w-full px-[20px] flex-row h-[50px] items-center mt-[${StatusBar.currentHeight}px]`, { backgroundColor: PRIMARY_COLOR }]}>
                 <TouchableOpacity style={tw`flex-1`} onPress={handleGoBack}>
                     <IconFontAwesome
@@ -221,7 +302,7 @@ const ProductDetail = ({ route, navigation }) => {
                                 ?
                                 <Loading />
                                 :
-                                <View style={tw`w-full pb-[80px]`}>
+                                <View style={tw`w-full pb-[10px]`}>
                                     <View style={tw`bg-white py-[10px] px-[14%]`}>
                                         {
                                             product?.images &&
@@ -245,12 +326,12 @@ const ProductDetail = ({ route, navigation }) => {
                                                     Đã bán {product?.sold}
                                                 </Text>
                                             </View>
-                                            <TouchableOpacity style={tw`mr-[20px]`}>
+                                            <TouchableOpacity onPress={handleAddToMyFavorites} style={tw`mr-[20px]`}>
                                                 <IconFontAwesome
                                                     name="heart"
                                                     size={20}
                                                     color={YELLOW_COLOR}
-                                                    solid={false}
+                                                    solid={checkFavorite()}
                                                 />
                                             </TouchableOpacity>
                                         </View>
@@ -263,7 +344,7 @@ const ProductDetail = ({ route, navigation }) => {
                                             </Text>
                                             <View style={[tw`ml-[6px] px-[6px] rounded-[4px]`, { backgroundColor: PRIMARY_COLOR }]}>
                                                 <Text style={tw`text-white text-[14px]`}>
-                                                    -{(((product?.old_price - product?.price) / product?.old_price).toFixed(2)) * 100} %
+                                                    -{(((product?.old_price - product?.price) / product?.old_price) * 100).toFixed(0)} %
                                                 </Text>
                                             </View>
                                         </View>
@@ -287,10 +368,12 @@ const ProductDetail = ({ route, navigation }) => {
                                         </View>
                                     </View>
                                     <View style={tw`bg-white mt-[10px]`}>
-                                        <Text style={tw`uppercase px-[10px] pt-[10px] text-[#333] font-bold`}>
+                                        <Text style={tw`uppercase px-[10px] py-[10px] text-[#333] font-bold`}>
                                             Sản phẩm liên quan
                                         </Text>
-                                        <ProductFrame.ProductFrame productList={productCategory} isSlide />
+                                        {
+                                            RenderSlideList(productCategory)
+                                        }
                                     </View>
                                     <View style={tw`bg-white mt-[10px]`}>
                                         <Text style={tw`uppercase px-[10px] pt-[10px] text-[#333] font-bold`}>
@@ -315,7 +398,10 @@ const ProductDetail = ({ route, navigation }) => {
                     </>
                 )}
             />
-            <AddProductToCartBar quantity={quantity} minus={handleMinus} plus={handlePlus} addToCart={handleAddToCart} />
+            {
+                !loading &&
+                <AddProductToCartBar quantity={quantity} minus={handleMinus} plus={handlePlus} addToCart={handleAddToCart} />
+            }
         </View>
     )
 }
@@ -333,7 +419,7 @@ const styles = StyleSheet.create({
 export const Loading = () => {
 
     return (
-        <View style={tw`w-full`}>
+        <View style={tw`w-full items-center justify-center bg-white`}>
             <View style={tw`bg-white py-[10px] px-[14%] items-center`}>
                 <Skeleton>
                     <Skeleton.Item width={200} height={300} />

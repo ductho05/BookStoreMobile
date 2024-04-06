@@ -7,7 +7,7 @@ import { BORDER_COLOR, PRIMARY_COLOR } from '../../styles/color.global'
 const AddProductToCartBar = ({ plus, minus, addToCart, buyNow, quantity }) => {
 
     return (
-        <View style={[styles.bar, tw`flex-row`]}>
+        <View style={[styles.container, tw`h-[50px] bg-white justify-center items-center`]}>
             <View style={tw`h-full flex-row items-center border-r border-[${BORDER_COLOR}]`}>
                 <TouchableOpacity onPress={minus} style={tw`px-[20px]`}>
                     <IconFont
@@ -23,7 +23,7 @@ const AddProductToCartBar = ({ plus, minus, addToCart, buyNow, quantity }) => {
                     />
                 </TouchableOpacity>
             </View>
-            <TouchableOpacity style={tw`px-[10px]`} onPress={addToCart}>
+            <TouchableOpacity style={tw`px-[10px] flex-1`} onPress={addToCart}>
                 <Text style={[tw`font-bold`, { color: PRIMARY_COLOR }]}>Thêm vào giỏ hàng</Text>
             </TouchableOpacity>
             <TouchableOpacity onPress={buyNow} style={[tw`px-[20px] flex-row items-center justify-center h-full`, { backgroundColor: PRIMARY_COLOR }]}>
@@ -35,17 +35,11 @@ const AddProductToCartBar = ({ plus, minus, addToCart, buyNow, quantity }) => {
 
 const styles = StyleSheet.create({
 
-    bar: {
-        width: '100%',
-        height: 50,
-        display: 'flex',
-        alignItems: 'center',
-        backgroundColor: '#fff',
-        position: 'absolute',
-        marginTop: '197%',
-        zIndex: 10000,
-        flexGrow: 1
-    }
+    container: {
+        bottom: 0,
+        zIndex: 100,
+        flexDirection: 'row',
+    },
 })
 
 export default AddProductToCartBar

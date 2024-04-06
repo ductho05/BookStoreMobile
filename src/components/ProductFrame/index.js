@@ -6,7 +6,7 @@ import ProductItem from '../ProductItem/index'
 import Button from '../Button/index'
 import Skeleton from "@thevsstech/react-native-skeleton"
 
-const RenderSlideList = (products) => {
+export const RenderSlideList = (products) => {
 
     return (
         <FlatList
@@ -26,12 +26,12 @@ export const RenderGridList = (products) => {
             numColumns={2}
             keyExtractor={(p) => p._id}
             data={products}
-            renderItem={({ item }) => <ProductItem product={item} />}
+            renderItem={({ item }) => <ProductItem key={item?._id} product={item} />}
         />
     )
 }
 
-const ProductFrame = ({ isSlide, productList, title }) => {
+const ProductFrame = ({ isSlide, productList, title, onPress }) => {
 
     const [currentTab, setCurrentTab] = React.useState(0)
 
@@ -60,7 +60,7 @@ const ProductFrame = ({ isSlide, productList, title }) => {
                     data={productList}
                     keyExtractor={(item) => item.title}
                     renderItem={({ item, index }) => (
-                        <TouchableOpacity onPress={() => handleChangeTab(index)}>
+                        <TouchableOpacity key={index} onPress={() => handleChangeTab(index)}>
                             <View style={[tw`px-[10px] mx-[10px] rounded-[6px] py-[4px] border`, { borderColor: `${currentTab === index ? YELLOW_COLOR : BORDER_COLOR}`, width: 'max-content' }]}>
                                 <Text style={[tw``, { color: `${currentTab === index ? YELLOW_COLOR : "#333"}` }]}>
                                     {item.title}
@@ -86,7 +86,7 @@ const ProductFrame = ({ isSlide, productList, title }) => {
                 title
                     ?
                     <View style={tw`mx-[35%]`}>
-                        <Button title="Xem thêm" type="line" size="small" />
+                        <Button title="Xem thêm" type="line" size="small" onPress={onPress} />
                     </View>
                     :
                     <View></View>

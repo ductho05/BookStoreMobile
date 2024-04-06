@@ -7,25 +7,51 @@ import {
   ScrollView,
 } from 'react-native';
 import React from 'react';
-import {useState, useEffect} from 'react';
-import {Avatar, Icon, Image, Skeleton, Rating, ListItem} from '@rneui/themed';
+import { useState, useEffect } from 'react';
+import { Avatar, Icon, Image, Skeleton, Rating, ListItem } from '@rneui/themed';
 import tw from 'twrnc';
 import Header from '../../components/Header/index';
 
-import {PRIMARY_COLOR} from '../../styles/color.global';
+import { PRIMARY_COLOR } from '../../styles/color.global';
 import Button from '../../components/Button/index';
-import {useSelector, useDispatch} from 'react-redux';
-import {color} from '@rneui/themed/dist/config';
-import {apiDeleteFavorites, apiGetFavoritesForMe} from '../../apis/data';
-import {getFavorites} from '../../stores/dataSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { color } from '@rneui/themed/dist/config';
+import { apiDeleteFavorites, apiGetFavoritesForMe } from '../../apis/data';
+import { getFavorites } from '../../stores/dataSlice';
+import { add } from '../../stores/cartSlice';
+import Toast from 'react-native-toast-message'
 
-const Favorite = ({navigation}) => {
-  const {favorites, loading} = useSelector(state => state.data);
-  const {user, token, isLoggedIn} = useSelector(state => state.user);
+const Favorite = ({ navigation }) => {
+  const { favorites, loading } = useSelector(state => state.data);
+  const { user, token, isLoggedIn } = useSelector(state => state.user);
+  const { data } = useSelector(state => state.cart)
+  const [cartData, setCartData] = React.useState([])
   const [completeLoading, setCompleteLoading] = useState(false);
 
   const [refreshing, setRefreshing] = useState(false);
   const [isdeleting, setIsdeleting] = useState(false);
+
+  const checkIndex = (id) => {
+
+    if (cartData) {
+      const index = cartData.findIndex((item) => item.product._id === id)
+
+      if (index !== -1) {
+        if ((cartData[index].quantity + 1) > product.quantity) {
+
+          return false
+        }
+      }
+      return true
+    } else {
+      return true
+    }
+  }
+
+  React.useEffect(() => {
+
+    setCartData(data[user?._id])
+  }, [data])
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
@@ -70,10 +96,33 @@ const Favorite = ({navigation}) => {
     }, 15000);
   }, []);
 
+  const handleToDetail = (id) => {
+    navigation.navigate('ProductDetail', {
+      productId: id,
+    })
+  }
+
+  const handleAddToCart = (product) => {
+    if (product?.quantity >= 1 && checkIndex(product._id)) {
+
+      dispatch(add({
+        data: {
+          product,
+          quantity: 1
+        },
+        userId: user?._id
+      }))
+      Toast.show({
+        type: 'success',
+        text1: 'Thêm vào giỏ hàng thành công!'
+      })
+    }
+  }
+
   // screen khi da dang nhap
   const fameItem = (item, index) => {
     return (
-      <View
+      <TouchableOpacity onPress={() => handleToDetail(item.productid._id)}
         key={index}
         style={tw`px-2 py-1 bg-white border-b border-gray-100 flex flex-row`}>
         <Image
@@ -81,8 +130,8 @@ const Favorite = ({navigation}) => {
             item?.productid?.images == null
               ? require('../../assets/images/images/bookimage.png')
               : {
-                  uri: item?.productid?.images,
-                }
+                uri: item?.productid?.images,
+              }
           }
           style={tw`flex justify-center items-center flex-2 w-[95px] h-full`}
         />
@@ -92,7 +141,7 @@ const Favorite = ({navigation}) => {
               numberOfLines={2}
               style={[
                 tw`text-[#333] flex-8 font-bold text-base`,
-                {height: 50, overflow: 'hidden'},
+                { height: 50, overflow: 'hidden' },
               ]}>
               {item?.productid?.title == null
                 ? '[Sản phẩm không còn tồn tại]'
@@ -145,12 +194,13 @@ const Favorite = ({navigation}) => {
           </Text>
 
           <View style={tw`flex-row justify-between items-center`}>
-            <Text style={[tw`text-[#666] text-xl `, {color: PRIMARY_COLOR}]}>
+            <Text style={[tw`text-[#666] text-xl `, { color: PRIMARY_COLOR }]}>
               {item.productid?.price == null
                 ? '[Trống]'
                 : formatToVND(item.productid?.price)}
             </Text>
             <TouchableOpacity
+              onPress={() => handleAddToCart(item.productid)}
               disabled={
                 item.quantity == 0 || item.productid == null ? true : false
               }
@@ -168,7 +218,7 @@ const Favorite = ({navigation}) => {
             </TouchableOpacity>
           </View>
         </View>
-      </View>
+      </TouchableOpacity>
     );
   };
 
@@ -183,7 +233,7 @@ const Favorite = ({navigation}) => {
           animation="wave"
           width={95}
           height={150}
-          // skeletonStyle={tw`w-[95px] h-full`}
+        // skeletonStyle={tw`w-[95px] h-full`}
         />
         <View style={tw`flex-3 flex-col flex py-[10px] px-[7px]`}>
           <View style={tw`flex-row justify-between items-start`}>
@@ -191,7 +241,7 @@ const Favorite = ({navigation}) => {
               animation="pulse"
               width={250}
               height={40}
-              // skeletonStyle={tw``}
+            // skeletonStyle={tw``}
             />
             <TouchableOpacity style={tw`flex-col items-center flex-1`}>
               <Icon
@@ -200,28 +250,28 @@ const Favorite = ({navigation}) => {
                 color="gray"
                 size={22}
                 style={tw`mr-[1px]`}
-                // onPress={async () => {
-                //   console.log('item123', item?.productid?._id);
-                //   const res = await apiDeleteFavorites(
-                //     token,
-                //     user?._id,
-                //     item?.productid?._id,
-                //   );
-                //   if (res.status == 200) {
-                //     console.log(
-                //       'r1232es',
-                //       favorites[0]._id,
-                //       res?.data.data._id,
-                //     );
-                //     dispatch(
-                //       getFavorites(
-                //         favorites.filter(
-                //           item => item?._id !== res?.data.data._id,
-                //         ),
-                //       ),
-                //     );
-                //   }
-                // }}
+              // onPress={async () => {
+              //   console.log('item123', item?.productid?._id);
+              //   const res = await apiDeleteFavorites(
+              //     token,
+              //     user?._id,
+              //     item?.productid?._id,
+              //   );
+              //   if (res.status == 200) {
+              //     console.log(
+              //       'r1232es',
+              //       favorites[0]._id,
+              //       res?.data.data._id,
+              //     );
+              //     dispatch(
+              //       getFavorites(
+              //         favorites.filter(
+              //           item => item?._id !== res?.data.data._id,
+              //         ),
+              //       ),
+              //     );
+              //   }
+              // }}
               />
             </TouchableOpacity>
           </View>
@@ -282,7 +332,7 @@ const Favorite = ({navigation}) => {
               </View>
             )
           ) : !completeLoading ? (
-            Array.from({length: 5}).map((_, index) => fameLoading(index))
+            Array.from({ length: 5 }).map((_, index) => fameLoading(index))
           ) : (
             <View style={tw`flex justify-center items-center h-200`}>
               <Text style={tw`text-[#666] text-base`}>
