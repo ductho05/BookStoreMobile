@@ -8,28 +8,28 @@ import {
   ScrollView,
 } from 'react-native';
 import React from 'react';
-import {useState, useEffect} from 'react';
-import {Avatar, Icon, Image, Skeleton, Rating, ListItem} from '@rneui/themed';
+import { useState, useEffect } from 'react';
+import { Avatar, Icon, Image, Skeleton, Rating, ListItem } from '@rneui/themed';
 import tw from 'twrnc';
 import Header from '../../components/Header/index';
 
-import {PRIMARY_COLOR} from '../../styles/color.global';
+import { PRIMARY_COLOR } from '../../styles/color.global';
 import Button from '../../components/Button/index';
-import {useSelector, useDispatch} from 'react-redux';
-import {color} from '@rneui/themed/dist/config';
+import { useSelector, useDispatch } from 'react-redux';
+import { color } from '@rneui/themed/dist/config';
 import {
   apiDeleteFavorites,
   apiGetVouchersForMe,
 } from '../../apis/data';
-import {getFavorites, getVouchers} from '../../stores/dataSlice';
+import { getFavorites, getVouchers } from '../../stores/dataSlice';
 
-const Voucher = ({navigation}) => {
-  const {loading, vouchers} = useSelector(state => state.data);
-  const {user, token, isLoggedIn} = useSelector(state => state.user);
+const Voucher = ({ navigation }) => {
+  const { loading, vouchers } = useSelector(state => state.data);
+  const { user, token, isLoggedIn } = useSelector(state => state.user);
   const [completeLoading, setCompleteLoading] = useState(false);
   // Check hướng điện thoại
   // Check hướng điện thoại
-  const {orientation} = useSelector(state => state.other);
+  const { orientation } = useSelector(state => state.other);
   const [refreshing, setRefreshing] = useState(false);
 
   const dispatch = useDispatch();
@@ -46,6 +46,8 @@ const Voucher = ({navigation}) => {
       ToastAndroid.show('Mạng không ổn định', ToastAndroid.SHORT);
     }
   }, []);
+
+  console.log("voucehr", vouchers)
 
   const icon = (name, size = 18, color = 'white', onPress) => {
     return (
@@ -85,9 +87,8 @@ const Voucher = ({navigation}) => {
     return (
       <View
         key={index}
-        style={tw`pl-2 pr-${
-          orientation == 'portrait' ? `3` : `2`
-        } py-1 bg-white border-b border-gray-100 flex flex-row`}>
+        style={tw`pl-2 pr-${orientation == 'portrait' ? `3` : `2`
+          } py-1 bg-white border-b border-gray-100 flex flex-row`}>
         <Image
           source={require('../../assets/images/images/coupon.png')}
           style={tw`flex justify-center items-center flex-2 w-40 h-full`}
@@ -103,7 +104,7 @@ const Voucher = ({navigation}) => {
               numberOfLines={2}
               style={[
                 tw`text-[#333] flex-8 font-bold text-base text-[#736357]`,
-                {height: 50, overflow: 'hidden'},
+                { height: 50, overflow: 'hidden' },
               ]}>
               Mã giảm giá: {item?.code}
             </Text>
@@ -114,7 +115,7 @@ const Voucher = ({navigation}) => {
 
           <Text style={tw`text-[#666] text-sm`}>HSD: {item?.expried}</Text>
 
-          <View style={tw`flex-row justify-between items-center`}>
+          <View style={tw`flex-col justify-between items-start`}>
             <Text style={[tw`text-[#BF1622] text-xl `]}>
               Giá trị: {item?.discount + '%'}
             </Text>
@@ -140,9 +141,8 @@ const Voucher = ({navigation}) => {
     return (
       <View
         key={index}
-        style={tw`pl-2 pr-${
-          orientation == 'portrait' ? `3` : `2`
-        } py-1 bg-white border-b border-gray-100  flex flex-row`}>
+        style={tw`pl-2 pr-${orientation == 'portrait' ? `3` : `2`
+          } py-1 bg-white border-b border-gray-100  flex flex-row`}>
         <Image
           source={require('../../assets/images/images/coupon.png')}
           style={tw`flex justify-center items-center flex-2 w-40 h-full`}
@@ -223,7 +223,7 @@ const Voucher = ({navigation}) => {
               </View>
             )
           ) : !completeLoading ? (
-            Array.from({length: 6}).map((_, index) => fameLoading(index))
+            Array.from({ length: 6 }).map((_, index) => fameLoading(index))
           ) : (
             <View style={tw`flex justify-center items-center h-200`}>
               <Text style={tw`text-[#666] text-base`}>

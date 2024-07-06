@@ -1,4 +1,4 @@
-import { NavigationContainer } from '@react-navigation/native';
+import { NavigationContainer, useLinkTo } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import TabAllRoutes from '../routerConfigs/TabAll.config';
 import { useDispatch, useSelector } from 'react-redux';
@@ -8,14 +8,17 @@ import Cart from '../../screens/user/Cart';
 import { useEffect } from 'react';
 import { checkUser, fetchInitialData } from '../../stores/asyncActions';
 import { getAddressDelivery, getOrientation } from '../../stores/otherSlice';
-import { Dimensions } from 'react-native';
+import { ActivityIndicator, Dimensions } from 'react-native';
 import { addUserToCart } from '../../stores/cartSlice';
 import { logout } from '../../stores/userSlice';
+import linking from '../linkings';
+import notifee from '@notifee/react-native';
 const Stack = createNativeStackNavigator()
 
 const TabAllStack = () => {
   const { token, user } = useSelector(state => state.user);
 
+  const linkTo = useLinkTo();
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -34,10 +37,22 @@ const TabAllStack = () => {
   React.useEffect(() => {
     dispatch(checkUser(token))
     dispatch(fetchInitialData(token ? token + user?._id : null))
+
+    notifee.onBackgroundEvent(event => {
+      console.log('event: ' + event);
+    });
+
+    notifee.onForegroundEvent(event => {
+      if (event.detail.pressAction) {
+        if (event.detail.pressAction.id === 'default') {
+          linkTo('/product-detail/65646a7d1d2b3aa954b7d9f3')
+        }
+      }
+    });
   }, []);
 
   return (
-    <NavigationContainer>
+    <NavigationContainer linking={linking} fallback={<ActivityIndicator color="red" size="large" />}>
       <Stack.Navigator
         initialRouteName={"TabBottom"}
         screenOptions={{

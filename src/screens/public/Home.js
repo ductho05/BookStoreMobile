@@ -15,9 +15,11 @@ import ScrollToTop from '../../components/ScrollToTop/index'
 import notifee from '@notifee/react-native';
 import Button from '../../components/Button'
 import { useNotification } from '../../hooks/useNotification'
+import { useLinkTo } from '@react-navigation/native'
 
 const Home = ({ navigation }) => {
 
+    const linkTo = useLinkTo()
     const flatListRef = React.useRef()
     const { loading, productsHots, categoryBooks, slideList, learnBooks } = useSelector(state => state.data)
     const [scrollPosition, setScrollPosition] = React.useState(0)
@@ -95,7 +97,13 @@ const Home = ({ navigation }) => {
 
     const onDisplayNotification = async () => {
 
-        displayNotification("test", "Notifiction content")
+        displayNotification({
+            title: 'Thông báo đơn hàng',
+            description: 'Đơn hàng của bạn đã được giao thành công!',
+            image: 'https://www.advotics.com/wp-content/uploads/2022/02/surat-jalan-01-1-4-1536x984.png',
+            //largeImage: 'https://salt.tikicdn.com/ts/product/69/2c/57/9d96bec7a87b33daf7fae7a717f2058c.jpg'
+        })
+        // linkTo('/product-detail/65646a7d1d2b3aa954b7d9d5')
     }
 
     return (
@@ -128,7 +136,6 @@ const Home = ({ navigation }) => {
                                         }
                                     </Swiper>
                                     <View >
-                                        <Button title="show notification" onPress={onDisplayNotification} />
                                         <Categories.Categories />
                                         <ProductFrame.ProductFrame
                                             title="Sản phẩm được quan tâm"

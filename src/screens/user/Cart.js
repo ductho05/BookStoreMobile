@@ -9,7 +9,7 @@ import { YELLOW_COLOR } from '../../styles/color.global'
 import numeral from 'numeral'
 import Button from '../../components/Button/index'
 import Toast from 'react-native-toast-message'
-import { minusQuantity, plusQuantity, remove } from '../../stores/cartSlice'
+import { minusQuantity, plusQuantity, remove, updateListCheckout } from '../../stores/cartSlice'
 import { apiGetProductById } from '../../apis/product'
 
 const Cart = ({ route, navigation }) => {
@@ -25,9 +25,11 @@ const Cart = ({ route, navigation }) => {
 
     React.useEffect(() => {
 
-        if (Object.keys(data).length > 0) {
-            if (data.hasOwnProperty(user._id)) {
-                setCartData(data[user._id])
+        if (isLoggedIn) {
+            if (Object.keys(data).length > 0) {
+                if (data.hasOwnProperty(user._id)) {
+                    setCartData(data[user._id])
+                }
             }
         }
 
@@ -73,7 +75,9 @@ const Cart = ({ route, navigation }) => {
                 type: 'info',
                 text1: 'Vui lòng chọn sản phẩm thanh toán!'
             })
+            return
         }
+        navigation.navigate('Checkout')
     }
 
     const handleMinus = (productId) => {
@@ -130,9 +134,15 @@ const Cart = ({ route, navigation }) => {
 
     React.useEffect(() => {
 
-        let caculateTotal = productSelector?.reduce((acc, item) => acc + item.quantity * item.product.price, 0)
+        if (isLoggedIn) {
+            let caculateTotal = productSelector?.reduce((acc, item) => acc + item.quantity * item.product.price, 0)
 
-        setTotal(caculateTotal)
+            setTotal(caculateTotal)
+            dispatch(updateListCheckout({
+                userId: user._id,
+                data: productSelector
+            }))
+        }
 
     }, [productSelector])
 

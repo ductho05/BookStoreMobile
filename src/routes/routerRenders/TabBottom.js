@@ -25,9 +25,11 @@ const TabBottom = ({ navigation }) => {
     const [numNewNotice, setNumNewNotice] = React.useState(0);
 
     React.useEffect(() => {
-        if (Object.keys(data).length > 0) {
-            if (data.hasOwnProperty(user._id)) {
-                setCartData(data[user._id])
+        if (isLoggedIn) {
+            if (Object.keys(data).length > 0) {
+                if (data.hasOwnProperty(user?._id)) {
+                    setCartData(data[user?._id])
+                }
             }
         }
 

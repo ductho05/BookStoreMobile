@@ -1,4 +1,4 @@
-import React, {useState, useMemo, useEffect, memo, useRef} from 'react';
+import React, { useState, useMemo, useEffect, memo, useRef } from 'react';
 import {
   View,
   Text,
@@ -11,15 +11,15 @@ import {
   Dimensions,
 } from 'react-native';
 import tw from 'twrnc';
-import {PRIMARY_COLOR} from '../../styles/color.global';
-import {Icon} from '@rneui/themed';
-import {getAddressDelivery} from '../../stores/otherSlice';
-import {useSelector, useDispatch} from 'react-redux';
-import {useNavigation} from '@react-navigation/native';
+import { PRIMARY_COLOR } from '../../styles/color.global';
+import { Icon } from '@rneui/themed';
+import { getAddressDelivery } from '../../stores/otherSlice';
+import { useSelector, useDispatch } from 'react-redux';
+import { useNavigation } from '@react-navigation/native';
 import CustomDialog from '../CustomDialog/index';
 
 const SwipeToDeleteEditItem = memo(
-  ({index, updateAddressDelivery, addressDelivery, func}) => {
+  ({ index, updateAddressDelivery, addressDelivery, func }) => {
     const pan = useRef(new Animated.ValueXY()).current;
     const [panX, setPanX] = useState(0);
     const [visible, setVisible] = useState(false);
@@ -31,9 +31,9 @@ const SwipeToDeleteEditItem = memo(
         PanResponder.create({
           onMoveShouldSetPanResponderCapture: () => true,
           onPanResponderMove: (_, gestureState) => {
-            const {dx} = gestureState;
+            const { dx } = gestureState;
             setPanX(dx);
-            Animated.event([null, {dx: pan.x}], {useNativeDriver: false})(
+            Animated.event([null, { dx: pan.x }], { useNativeDriver: false })(
               _,
               gestureState,
             );
@@ -53,7 +53,7 @@ const SwipeToDeleteEditItem = memo(
 
     const resetPosition = () => {
       Animated.spring(pan, {
-        toValue: {x: 0, y: 0},
+        toValue: { x: 0, y: 0 },
         // duration: 400, // Thời gian để di chuyển mục
 
         useNativeDriver: false,
@@ -67,7 +67,7 @@ const SwipeToDeleteEditItem = memo(
 
     const handleDelete = () => {
       Animated.timing(pan, {
-        toValue: {x: Dimensions.get('window').width, y: 0},
+        toValue: { x: Dimensions.get('window').width, y: 0 },
         duration: 400, // Thời gian để di chuyển mục
         useNativeDriver: false,
       }).start(() => {
@@ -81,12 +81,12 @@ const SwipeToDeleteEditItem = memo(
 
     const handleEdit = () => {
       Animated.timing(pan, {
-        toValue: {x: -Dimensions.get('window').width, y: 0},
+        toValue: { x: -Dimensions.get('window').width, y: 0 },
         duration: 400, // Thời gian để di chuyển mục
         useNativeDriver: false,
       }).start(() => {
-        navigation.navigate('AddDeliveryAddress', {
-          data: addressDelivery[index],
+        navigation.navigate('AddAddress', {
+          address: addressDelivery[index],
         });
         resetPosition();
       });
@@ -132,9 +132,8 @@ const SwipeToDeleteEditItem = memo(
               width: '100%',
               height: '100%',
               flex: 1,
-              backgroundColor: `rgb(${255 + panX * 0.7}, ${
-                255 + panX * 0.7
-              }, 255)`,
+              backgroundColor: `rgb(${255 + panX * 0.7}, ${255 + panX * 0.7
+                }, 255)`,
             }}>
             <Text style={tw`text-white text-8 mr-2`}>Sửa</Text>
             <Icon
@@ -157,9 +156,8 @@ const SwipeToDeleteEditItem = memo(
               width: '100%',
               height: '100%',
               flex: 1,
-              backgroundColor: `rgb(255, ${255 - panX * 0.8}, ${
-                255 - panX * 0.8
-              })`,
+              backgroundColor: `rgb(255, ${255 - panX * 0.8}, ${255 - panX * 0.8
+                })`,
             }}>
             <Icon
               style={tw`text-white ml-6`}
@@ -173,7 +171,7 @@ const SwipeToDeleteEditItem = memo(
         )}
         <Animated.View
           style={{
-            transform: [{translateX: pan.x}],
+            transform: [{ translateX: pan.x }],
           }}
           {...panResponder.panHandlers}>
           <TouchableOpacity
@@ -182,8 +180,8 @@ const SwipeToDeleteEditItem = memo(
               addressDelivery[index].selected
                 ? null
                 : () => {
-                    setVisible(true);
-                  }
+                  setVisible(true);
+                }
             }
             activeOpacity={1}
             style={{
@@ -222,16 +220,14 @@ const SwipeToDeleteEditItem = memo(
                 </View>
                 <Text style={tw`text-[#666] text-sm`}>
                   SĐT:{' '}
-                  {addressDelivery[index].numberPhone == null
+                  {addressDelivery[index].phone == null
                     ? '[Không có thông tin]'
-                    : '(+84) ' + addressDelivery[index].numberPhone.slice(1)}
+                    : '(+84) ' + addressDelivery[index].phone.slice(1)}
                 </Text>
 
                 <Text style={tw`text-[#666] text-sm`}>
                   Địa chỉ:{' '}
-                  {addressDelivery[index].address == null
-                    ? '[Không có thông tin]'
-                    : addressDelivery[index].address}
+                  {`${addressDelivery[index].street}, ${addressDelivery[index].ward}, ${addressDelivery[index].district}, ${addressDelivery[index].province}`}
                 </Text>
               </View>
             </View>

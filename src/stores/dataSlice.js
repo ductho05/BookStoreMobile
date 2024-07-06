@@ -15,7 +15,10 @@ const initialState = {
   allMyOrder: [],
   loading: true,
   categories: [],
-  notifications: []
+  notifications: [],
+  provinces: [],
+  districes: [],
+  wards: [],
 };
 
 const dataSlice = createSlice({
@@ -59,7 +62,21 @@ const dataSlice = createSlice({
     getNotification: (state, action) => {
 
       state.notifications = action.payload
-    }
+    },
+    getProvince: (state, action) => {
+
+      state.provinces = action.payload
+    },
+
+    getDistrict: (state, action) => {
+
+      state.districes = action.payload
+    },
+
+    getWard: (state, action) => {
+
+      state.wards = action.payload
+    },
   },
   extraReducers: builder => {
     builder.addCase(fetchInitialData.pending, state => {
@@ -101,7 +118,10 @@ export const {
   getCancelMyOrder,
   getAllMyOrder,
   updateFavorites,
-  getNotification
+  getNotification,
+  getProvince,
+  getDistrict,
+  getWard
 } = dataSlice.actions;
 
 export default dataSlice.reducer;

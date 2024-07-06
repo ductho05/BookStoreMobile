@@ -26,6 +26,9 @@ import AuthenticateOTP from "../../screens/auth/AuthenticateOTP"
 import EditProfile from "../../screens/user/EditProfile"
 import ChangePassword from "../../screens/user/ChangePassword"
 import AuthenChangeEmail from "../../screens/user/AuthenChangeEmail"
+import AddAddress from "../../screens/user/AddAddress"
+import Checkout from "../../screens/user/Checkout"
+import CheckoutSuccess from "../../screens/user/CheckoutSuccess"
 
 const TabAllRoutes = [
   {
@@ -139,6 +142,18 @@ const TabAllRoutes = [
   {
     name: 'AuthenChangeEmail',
     component: AuthenChangeEmail
+  },
+  {
+    name: 'AddAddress',
+    component: AddAddress
+  },
+  {
+    name: 'Checkout',
+    component: Checkout
+  },
+  {
+    name: 'CheckoutSuccess',
+    component: CheckoutSuccess
   }
 ];
 

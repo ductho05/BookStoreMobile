@@ -1,22 +1,20 @@
 import React from 'react';
 import Introduction from './components/loaders/Introduction';
 import TabAllStack from './routes/routerRenders/TabAllStack';
-import { StatusBar, View } from 'react-native';
+import { StatusBar } from 'react-native';
 import { PRIMARY_COLOR } from './styles/color.global';
 import { useDispatch, useSelector } from 'react-redux';
 import { checkUser } from './stores/asyncActions';
-import { PermissionsAndroid } from 'react-native';
 import messaging from '@react-native-firebase/messaging';
-import { Alert } from 'react-native';
-import { getData, plusNumNotice, setData } from './utils/storage';
-import { updateNumnotice } from './stores/userSlice';
-import tw from 'twrnc'
-import notifee from '@notifee/react-native';
+import { getData, setData } from './utils/storage';
+import { apiUpdateUser } from './apis/user';
+import { update } from './stores/userSlice';
+import { useNotification } from './hooks/useNotification';
 
 const getToken = () => {
-    messaging().getToken().then((deviceToken) => {
-        if (!getData("deviceToken") && deviceToken) {
-
+    messaging().getToken().then(async (deviceToken) => {
+        const device_token = await getData("deviceToken")
+        if (!device_token && deviceToken) {
             setData("deviceToken", deviceToken)
         }
     })
@@ -34,36 +32,61 @@ const permission = () => {
 
 const Main = () => {
     const [isIntro, setIsIntro] = React.useState(true);
-    const { token } = useSelector(state => state.user);
+    const { token, isLoggedIn, user } = useSelector(state => state.user);
     const dispatch = useDispatch();
+    const { displayNotification } = useNotification()
 
-    const displayNotification = () => {
+    const handleDisplayNotification = () => {
 
         messaging().onMessage(async (remoteMessage) => {
-
-            Alert.alert('new notification')
+            if (remoteMessage) {
+                displayNotification({
+                    title: remoteMessage.notification.title,
+                    description: remoteMessage.notification.body,
+                    image: remoteMessage.data.image,
+                    largeImage: remoteMessage.data.largeImage,
+                    linking: remoteMessage.data.linking
+                }, "sound")
+            }
         });
-
-        messaging().onNotificationOpenedApp(async (remoteMessage) => {
-
-            plusNumNotice()
-        });
-
-        // messaging().getInitialNotification().then(async (remoteMessage) => {
-
-        //   dispatch(updateNumnotice(1))
-        // });
 
         messaging().setBackgroundMessageHandler(async remoteMessage => {
-
+            if (remoteMessage) {
+                displayNotification({
+                    title: remoteMessage.notification.title,
+                    description: remoteMessage.notification.body,
+                    image: remoteMessage.data.image,
+                    largeImage: remoteMessage.data.largeImage,
+                }, "sound")
+            }
         });
+
+
+    }
+
+    const updateDeviceToken = async () => {
+
+        const device_token = await getData('deviceToken')
+        if (device_token) {
+            if (!user.hasOwnProperty('device_token') || user?.device_token != device_token) {
+
+                const formData = new FormData()
+                formData.append("device_token", device_token)
+
+                const response = await apiUpdateUser(formData, user._id, token)
+                if (response?.status === 200) {
+
+                    dispatch(update(response.data.data))
+                }
+            }
+        }
     }
 
     React.useEffect(() => {
 
         permission()
         getToken()
-        displayNotification()
+        handleDisplayNotification()
 
         setTimeout(() => {
             setIsIntro(false);
@@ -75,6 +98,13 @@ const Main = () => {
     React.useEffect(() => {
         dispatch(checkUser(token))
     }, []);
+
+    React.useEffect(() => {
+
+        if (isLoggedIn) {
+            updateDeviceToken()
+        }
+    }, [isLoggedIn])
 
     return (
         <>

@@ -1,13 +1,13 @@
-import React, {useMemo} from 'react';
-import {useState, useEffect} from 'react';
-import {memo} from 'react';
-import {Tab, Text, TabView} from '@rneui/themed';
-import {PRIMARY_COLOR} from '../../styles/color.global';
-import {Dimensions} from 'react-native';
-import {useSelector} from 'react-redux';
-const CustomTab = ({data}) => {
+import React, { useMemo } from 'react';
+import { useState, useEffect } from 'react';
+import { memo } from 'react';
+import { Tab, Text, TabView } from '@rneui/themed';
+import { PRIMARY_COLOR } from '../../styles/color.global';
+import { Dimensions } from 'react-native';
+import { useSelector } from 'react-redux';
+const CustomTab = ({ data }) => {
   const [index, setIndex] = useState(0);
-  const {orientation} = useSelector(state => state.other);
+  const { orientation } = useSelector(state => state.other);
 
   // console.log('reder lại CustomTab');
   return (
@@ -25,7 +25,7 @@ const CustomTab = ({data}) => {
         }}
         containerStyle={{
           backgroundColor: 'white',
-          height: 50,
+          height: 60,
           width:
             orientation != 'portrait'
               ? Dimensions.get('window').width / 5
@@ -62,7 +62,7 @@ const CustomTab = ({data}) => {
           return (
             <TabView.Item
               key={e}
-              style={{backgroundColor: 'white', width: '100%'}}>
+              style={{ backgroundColor: 'white', width: '100%' }}>
               {item.content}
             </TabView.Item>
           );

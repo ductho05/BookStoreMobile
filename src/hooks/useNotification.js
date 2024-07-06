@@ -1,25 +1,36 @@
-import notifee, { TimestampTrigger, TriggerType, RepeatFrequency } from '@notifee/react-native';
+import notifee, { TimestampTrigger, TriggerType, RepeatFrequency, AndroidImportance, AndroidStyle } from '@notifee/react-native';
 
 export const useNotification = () => {
-    async function displayNotification(title, body) {
+
+    async function displayNotification(notification, id) {
+
         // Create a channel required for Android Notifications
         const channelId = await notifee.createChannel({
-            id: 'default',
-            name: 'Default Channel',
+            id: id,
+            name: 'General',
+            importance: AndroidImportance.HIGH,
+            sound: 'sound',
         });
 
-        // Required for iOS
-        // See https://notifee.app/react-native/docs/ios/permissions
-        await notifee.requestPermission();
+        await notifee.requestPermission()
 
-        // Display a notification
         const notificationId = notifee.displayNotification({
-            // id: "string" | updates Notification instead if provided id already exists
-            title: title,
-            body: body,
+            title: notification?.title,
+            body: notification?.description,
             android: {
                 channelId,
-                /* smallIcon: "smallIcon" | defaults to 'ic_launcher', respectively your app icon. */
+                smallIcon: "ic_launcher",
+                largeIcon: notification?.image,
+                style: {
+                    type: AndroidStyle.BIGPICTURE,
+                    picture: notification.hasOwnProperty('largeImage') && notification?.largeImage ? notification?.largeImage : null
+                },
+                actions: [
+                    {
+                        pressAction: { id: 'default' },
+                        title: 'Xem ngay!'
+                    }
+                ]
             },
         });
         return notificationId;

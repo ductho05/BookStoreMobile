@@ -55,20 +55,20 @@ export const getAuthInstance = token => {
         },
     })
 
-    instance.interceptors.response.use(
-        response => response,
-        error => {
-            console.log(error)
-            const { status } = error.response;
+    // instance.interceptors.response.use(
+    //     response => response,
+    //     error => {
+    //         console.log(error)
+    //         const { status } = error.response;
 
-            if (status === 401) {
+    //         if (status === 401) {
 
-                console.log("token het han")
-            }
+    //             console.log("token het han")
+    //         }
 
-            return Promise.reject(error);
-        }
-    )
+    //         return Promise.reject(error);
+    //     }
+    // )
 
     return instance
 };

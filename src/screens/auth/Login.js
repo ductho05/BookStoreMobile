@@ -27,7 +27,8 @@ import { API_URL } from '../../constants/index';
 import axios from 'axios';
 import { login } from '../../stores/userSlice';
 import Dialog from "react-native-dialog"
-import { apiVerifyOtp } from '../../apis/user';
+import { apiUpdateUser, apiVerifyOtp } from '../../apis/user';
+import { getData } from '../../utils/storage';
 
 const Login = ({ navigation }) => {
     const [isShowPassword, setIsShowPassword] = React.useState(false);
@@ -83,7 +84,7 @@ const Login = ({ navigation }) => {
 
         setLoading(true)
         axios.post(`${API_URL}/users/login`, { ...data })
-            .then(response => {
+            .then(async response => {
                 setLoading(false)
                 if (response.status == 200) {
 

@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -13,20 +13,20 @@ import {
   ScrollView,
 } from 'react-native';
 import axios from 'axios';
-import {getAuthInstance} from '../../utils/storage';
-import {useSelector, useDispatch} from 'react-redux';
-import {Avatar, Icon, Skeleton, Rating, ListItem} from '@rneui/themed';
+import { getAuthInstance } from '../../utils/storage';
+import { useSelector, useDispatch } from 'react-redux';
+import { Avatar, Icon, Skeleton, Rating, ListItem } from '@rneui/themed';
 import tw from 'twrnc';
-import {PRIMARY_COLOR} from '../../styles/color.global';
+import { PRIMARY_COLOR } from '../../styles/color.global';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {set} from 'react-hook-form';
-import {apiGetAllOrderForMe} from '../../apis/data';
-import {getAllMyOrder} from '../../stores/dataSlice';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
-import {useRef} from 'react';
-import {useMemo} from 'react';
+import { set } from 'react-hook-form';
+import { apiGetAllOrderForMe } from '../../apis/data';
+import { getAllMyOrder } from '../../stores/dataSlice';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
+import { useRef } from 'react';
+import { useMemo } from 'react';
 
-const ItemFlatList = memo(({item, index}) => {
+const ItemFlatList = memo(({ item, index }) => {
   // console.log('day ne troi ', item, index);
 
   const formatToVND = number => {
@@ -62,7 +62,7 @@ const ItemFlatList = memo(({item, index}) => {
             numberOfLines={1}
             style={[
               tw`text-[#333] flex-8 font-bold text-base`,
-              {height: 25, overflow: 'hidden'},
+              { height: 25, overflow: 'hidden' },
             ]}>
             Mã đơn:{' '}
             {item?._id == null ? '[Sản phẩm không còn tồn tại]' : item?._id}
@@ -97,23 +97,23 @@ const ItemFlatList = memo(({item, index}) => {
           phẩm
         </Text>
         <View style={tw`flex-row justify-between items-center`}>
-          <Text style={[tw`text-[#666] text-xl `, {color: PRIMARY_COLOR}]}>
+          <Text style={[tw`text-[#666] text-xl `, { color: PRIMARY_COLOR }]}>
             Thành tiền:{' '}
             {!item?.price == null ? '[Trống]' : formatToVND(item?.price)}
           </Text>
           <TouchableOpacity
             disabled={true}
             style={[
-              tw`flex-row w-35 items-center rounded h-10 justify-center`,
+              tw`flex-row w-32 items-center rounded h-10 justify-center`,
               {
                 backgroundColor:
                   item?.status == 'CHOXACNHAN'
                     ? '#FFA500'
                     : item?.status == 'DANGGIAO'
-                    ? '#FF4500'
-                    : item?.status == 'HOANTHANH'
-                    ? '#32CD32'
-                    : '#FF0000',
+                      ? '#FF4500'
+                      : item?.status == 'HOANTHANH'
+                        ? '#32CD32'
+                        : '#FF0000',
               },
             ]}>
             {icon(
@@ -121,20 +121,20 @@ const ItemFlatList = memo(({item, index}) => {
                 item?.status == 'CHOXACNHAN'
                   ? 'cube-outline'
                   : item?.status == 'DANGGIAO'
-                  ? 'airplane-outline'
-                  : item?.status == 'HOANTHANH'
-                  ? 'checkmark-circle-outline'
-                  : 'close-circle-outline'),
+                    ? 'airplane-outline'
+                    : item?.status == 'HOANTHANH'
+                      ? 'checkmark-circle-outline'
+                      : 'close-circle-outline'),
               (size = 20),
             )}
             <Text style={tw`text-white text-sm`}>
               {item?.status == 'CHOXACNHAN'
                 ? 'Chờ xác nhận'
                 : item?.status == 'DANGGIAO'
-                ? 'Đang giao'
-                : item?.status == 'HOANTHANH'
-                ? 'Hoàn thành'
-                : 'Đã hủy'}
+                  ? 'Đang giao'
+                  : item?.status == 'HOANTHANH'
+                    ? 'Hoàn thành'
+                    : 'Đã hủy'}
             </Text>
           </TouchableOpacity>
         </View>

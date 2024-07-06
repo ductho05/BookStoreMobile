@@ -8,28 +8,28 @@ import {
   PanResponder,
   Touchable,
 } from 'react-native';
-import React, {memo} from 'react';
-import {useState, useEffect} from 'react';
-import {Avatar, Icon, ListItem, Dialog, Skeleton, Rating} from '@rneui/themed';
+import React, { memo } from 'react';
+import { useState, useEffect } from 'react';
+import { Avatar, Icon, ListItem, Dialog, Skeleton, Rating } from '@rneui/themed';
 
 import tw from 'twrnc';
 import Header from '../../components/Header/index';
 import SwipeToDeleteEditItem from '../../components/SwipeToDeleteEditItem/index';
-import {PRIMARY_COLOR} from '../../styles/color.global';
+import { PRIMARY_COLOR } from '../../styles/color.global';
 import Button from '../../components/Button/index';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import {color} from '@rneui/themed/dist/config';
-import {apiDeleteFavorites, apiGetFavoritesForMe} from '../../apis/data';
-import {getFavorites} from '../../stores/dataSlice';
+import { color } from '@rneui/themed/dist/config';
+import { apiDeleteFavorites, apiGetFavoritesForMe } from '../../apis/data';
+import { getFavorites } from '../../stores/dataSlice';
 import CustomDialog from '../../components/CustomDialog';
-import {getAddressDelivery} from '../../stores/otherSlice';
-const DeliveryAddress = ({navigation}) => {
-  const {user, token, isLoggedIn} = useSelector(state => state.user);
+import { getAddressDelivery } from '../../stores/otherSlice';
+const DeliveryAddress = ({ route, navigation }) => {
+  const { user, token, isLoggedIn } = useSelector(state => state.user);
   const [completeLoading, setCompleteLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isdeleting, setIsdeleting] = useState(false);
-  const {addressDelivery, orientation} = useSelector(state => state.other);
+  const { addressDelivery, orientation } = useSelector(state => state.other);
   const [deleteItem, setDeleteItem] = useState(null);
 
   const dispatch = useDispatch();
@@ -67,8 +67,8 @@ const DeliveryAddress = ({navigation}) => {
       getAddressDelivery(
         addressDelivery.map(data => {
           return data.id == item.id
-            ? {...data, selected: !data.selected}
-            : {...data, selected: false};
+            ? { ...data, selected: !data.selected }
+            : { ...data, selected: false };
         }),
       ),
     );
@@ -115,9 +115,8 @@ const DeliveryAddress = ({navigation}) => {
         />
       ) : null}
       <View
-        style={tw`flex-1 bg-[#f5f5f5] flex-${
-          orientation == 'portrait' ? `col` : `row`
-        } justify-center`}>
+        style={tw`flex-1 bg-[#f5f5f5] flex-${orientation == 'portrait' ? `col` : `row`
+          } justify-center`}>
         <ScrollView
           style={tw`flex-10 flex bg-white flex-col `}
           refreshControl={
@@ -149,7 +148,7 @@ const DeliveryAddress = ({navigation}) => {
               type="line"
               size="thin"
               icon={() => icon('add', 20, PRIMARY_COLOR)}
-              onPress={() => navigation.navigate('AddDeliveryAddress')}
+              onPress={() => navigation.navigate('AddAddress', { address: null })}
             />
           </View>
         ) : (
