@@ -28,12 +28,10 @@ export const apiGetFavoritesForMe = async token => {
   // const {user} = useSelector(state => state.user);
   const last24Chars = token.slice(-24);
   const firstPart = token.slice(0, -24);
-  console.log('21e22s', last24Chars, '+++', firstPart);
   try {
     const response = await getAuthInstance(firstPart).get(
       `/favorites?userid=${last24Chars}`,
     );
-    console.log('response21', response.data);
     return response;
   } catch (error) {
     console.error('Error fetching favorites:', error);

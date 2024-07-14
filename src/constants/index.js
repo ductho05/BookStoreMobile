@@ -1,10 +1,10 @@
 //const isDeploy = process.env.NODE_ENV === 'production';
-const isDeploy = true;
+const isDeploy = false;
 
 export const API_URL =
   isDeploy === true
     ? 'https://bookstore-ta-v3.onrender.com/bookstore/api/v1'
-    : 'http://192.168.3.249:3000/bookstore/api/v1';
+    : 'http://192.168.62.29:3000/bookstore/api/v1'
 // export const API_URL = 'http://192.168.43.204:3000/bookstore/api/v1'
 // export const API_URL = 'http://192.168.1.65:3000/bookstore/api/v1'
 
@@ -12,6 +12,7 @@ export const API_ADDRESS = 'https://vapi.vnappmob.com'
 export const apiMaps = 'https://api.mapbox.com/'
 export const API_KEY = 'pk.eyJ1IjoiZHVjdGhvIiwiYSI6ImNsanlmem5kaDA0OTIzZnFnMGpmMzhlZ2sifQ.Tm8Tc--X7kKEwGD3p7N1gw';
 export const locationShop = [106.762681, 10.854211]
+export const API_RECOMMENDATIONS = 'http://192.168.62.29:5000/bookstore/api/v1/recommendations'
 
 export const listPathHots = [
   {
@@ -144,3 +145,10 @@ export const paymentMethodList = [
 export const shippingMethodList = [
   'Giao hàng tiêu chuẩn'
 ]
+
+export const STATUS = {
+  CHOXACNHAN: "CHOXACNHAN",
+  DANGGIAO: "DANGGIAO",
+  HOANTHANH: "HOANTHANH",
+  DAHUY: "DAHUY"
+}

@@ -21,7 +21,7 @@ const persistCartConfig = {
 const persistConfig2 = {
   key: 'root2',
   storage: AsyncStorage,
-  whitelist: ['addressDelivery', 'orientation'],
+  whitelist: ['addressDelivery', 'orientation', 'listTitle'],
 };
 
 const persistedReducer = persistReducer(persistConfig, userReducer);

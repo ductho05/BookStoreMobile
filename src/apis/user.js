@@ -120,3 +120,63 @@ export const apiUpdateVoucher = async (id, data) => {
         throw new Error('update voucher Error')
     }
 }
+
+export const apiGetMyEvaluate = async (token) => {
+    try {
+        const response = await getAuthInstance(token).post(`${API_URL}/evaluates`)
+
+        return response
+    } catch (error) {
+
+        console.log(error)
+        throw new Error('get evaluates Error')
+    }
+}
+
+export const apiMyOrderItem = async (token) => {
+    try {
+        const response = await getAuthInstance(token).post(`${API_URL}/orderitems/order/filter?status_order=HOANTHANH&status=CHUADANHGIA`)
+
+        return response
+    } catch (error) {
+
+        console.log(error)
+        throw new Error('get My order item Error')
+    }
+}
+
+export const apiGetOrderbyId = async (token, id) => {
+    try {
+        const response = await getAuthInstance(token).get(`${API_URL}/orders/id/${id}`)
+
+        return response
+    } catch (error) {
+
+        console.log(error)
+        throw new Error('get My order item Error')
+    }
+}
+
+export const apiGetOrderItembyOrder = async (token, id) => {
+    try {
+        const response = await getAuthInstance(token).get(`${API_URL}/orderitems/order?id=${id}`)
+
+        return response
+    } catch (error) {
+
+        console.log(error)
+        throw new Error('get My order item Error')
+    }
+}
+
+export const apiupdateOrder = async (token, id, data) => {
+    try {
+        const response = await getAuthInstance(token).put(`${API_URL}/orders/update/${id}`, data)
+
+        return response
+    } catch (error) {
+
+        console.log(error)
+        throw new Error('get My order item Error')
+    }
+}

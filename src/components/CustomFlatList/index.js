@@ -1,4 +1,4 @@
-import React, {memo, useEffect, useState} from 'react';
+import React, { memo, useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -12,15 +12,15 @@ import {
   StatusBar,
   ScrollView,
 } from 'react-native';
-import axios, {all} from 'axios';
-import {getAuthInstance} from '../../utils/storage';
-import {useSelector, useDispatch} from 'react-redux';
-import {Avatar, Icon, Skeleton, Rating, ListItem} from '@rneui/themed';
+import axios, { all } from 'axios';
+import { getAuthInstance } from '../../utils/storage';
+import { useSelector, useDispatch } from 'react-redux';
+import { Avatar, Icon, Skeleton, Rating, ListItem } from '@rneui/themed';
 import tw from 'twrnc';
-import {PRIMARY_COLOR} from '../../styles/color.global';
+import { PRIMARY_COLOR } from '../../styles/color.global';
 import Clipboard from '@react-native-clipboard/clipboard';
-import {set} from 'react-hook-form';
-import {apiGetAllOrderForMe, apiGetStatusOrderForMe} from '../../apis/data';
+import { set } from 'react-hook-form';
+import { apiGetAllOrderForMe, apiGetStatusOrderForMe } from '../../apis/data';
 import {
   getAllMyOrder,
   getConfirmMyOrder,
@@ -28,25 +28,25 @@ import {
   getCompleteMyOrder,
   getCancelMyOrder,
 } from '../../stores/dataSlice';
-import {useFocusEffect, useNavigation} from '@react-navigation/native';
+import { useFocusEffect, useNavigation } from '@react-navigation/native';
 
-import {useRef} from 'react';
+import { useRef } from 'react';
 // import FlatList from './FlatList';
-import {useMemo} from 'react';
+import { useMemo } from 'react';
 import ItemFlatList from './ItemFlatList';
 
-const CustomFlatList = memo(({allMyOrder, type}) => {
+const CustomFlatList = memo(({ allMyOrder, type }) => {
   // const [users, setUsers] = useState([]);
-  const {orientation} = useSelector(state => state.other);
+  const { orientation } = useSelector(state => state.other);
   const [data, setData] = useState([]);
   const [isEnd, setIsEnd] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   // const pageRef = useRef(currentPage);
   const [isLoading, setIsLoading] = useState(false);
-  const {loading} = useSelector(state => state.data);
+  const { loading, reloadData } = useSelector(state => state.data);
   // const [completeLoading, setCompleteLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
-  const {user, token} = useSelector(state => state.user);
+  const { user, token } = useSelector(state => state.user);
   const dispatch = useDispatch();
   const navigation = useNavigation();
   const i = useRef(0);
@@ -81,12 +81,12 @@ const CustomFlatList = memo(({allMyOrder, type}) => {
       type == 'Tất cả'
         ? dispatch(getAllMyOrder(response?.data?.data))
         : type == '0'
-        ? dispatch(getConfirmMyOrder(response?.data?.data))
-        : type == '1'
-        ? dispatch(getDeliveryMyOrder(response?.data?.data))
-        : type == '2'
-        ? dispatch(getCompleteMyOrder(response?.data?.data))
-        : dispatch(getCancelMyOrder(response?.data?.data));
+          ? dispatch(getConfirmMyOrder(response?.data?.data))
+          : type == '1'
+            ? dispatch(getDeliveryMyOrder(response?.data?.data))
+            : type == '2'
+              ? dispatch(getCompleteMyOrder(response?.data?.data))
+              : dispatch(getCancelMyOrder(response?.data?.data));
       // console.log('abc3');
       setCurrentPage(1);
       // console.log('abc4');
@@ -98,7 +98,7 @@ const CustomFlatList = memo(({allMyOrder, type}) => {
       setRefreshing(false);
       ToastAndroid.show('Mạng không ổn định', ToastAndroid.SHORT);
     }
-  }, []);
+  }, [reloadData]);
   const getUsers = async () => {
     setIsLoading(true);
     //const allMyOrderNew = allMyOrder.slice(0, 10 * currentPage);
@@ -154,12 +154,11 @@ const CustomFlatList = memo(({allMyOrder, type}) => {
               animation="wave"
               width={orientation != 'portrait' ? 400 : 280}
               height={25}
-              // skeletonStyle={tw``}
+            // skeletonStyle={tw``}
             />
             <TouchableOpacity
-              style={tw`flex-col items-center flex-1 ${
-                orientation != 'portrait' ? `ml-80` : ``
-              }`}>
+              style={tw`flex-col items-center flex-1 ${orientation != 'portrait' ? `ml-80` : ``
+                }`}>
               <Icon
                 name={'copy-outline'}
                 type="ionicon"
@@ -241,7 +240,7 @@ const CustomFlatList = memo(({allMyOrder, type}) => {
             <>
               <FlatList
                 data={data}
-                renderItem={({item, index}) => {
+                renderItem={({ item, index }) => {
                   return <ItemFlatList item={item} index={index} />;
                 }}
                 keyExtractor={item => item._id}
@@ -262,12 +261,11 @@ const CustomFlatList = memo(({allMyOrder, type}) => {
             </>
           ) : (
             <View
-              style={tw`text-center text-[#666] ${
-                orientation == `portrait`
+              style={tw`text-center text-[#666] ${orientation == `portrait`
                   ? `pr-3 h-200 w-100 text-base`
                   : `w-210 h-full text-base`
-              }`}>
-              {Array.from({length: 5}).map((_, index) => fameLoading(index))}
+                }`}>
+              {Array.from({ length: 5 }).map((_, index) => fameLoading(index))}
             </View>
           )
         ) : (
@@ -288,37 +286,36 @@ const CustomFlatList = memo(({allMyOrder, type}) => {
                 {type === 'Tất cả'
                   ? ''
                   : type === '0'
-                  ? 'đang chờ xác nhận'
-                  : type === '1'
-                  ? 'đang giao'
-                  : type === '2'
-                  ? 'đã hoàn thành'
-                  : 'đã hủy'}
+                    ? 'đang chờ xác nhận'
+                    : type === '1'
+                      ? 'đang giao'
+                      : type === '2'
+                        ? 'đã hoàn thành'
+                        : 'đã hủy'}
                 !
               </Text>
             </View>
           </ScrollView>
         )
       ) : /* đang loading đầu tiên */
-      // trước 15sx
-      !completeLoading ? (
-        <View
-          style={tw`text-center text-[#666] 
-          ${
-            orientation == `portrait`
-              ? `pr-2 h-200 text-base`
-              : `w-210 h-full text-base`
-          }`}>
-          {Array.from({length: 5}).map((_, index) => fameLoading(index))}
-        </View>
-      ) : (
-        // sau 15s mà chưa load xong, khả năng cao là mạng yếu
-        <View style={tw`flex justify-center items-center h-200`}>
-          <Text style={tw`text-[#666] text-base`}>
-            Mạng không ổn định, vui lòng thử lại!
-          </Text>
-        </View>
-      )}
+        // trước 15sx
+        !completeLoading ? (
+          <View
+            style={tw`text-center text-[#666] 
+          ${orientation == `portrait`
+                ? `pr-2 h-200 text-base`
+                : `w-210 h-full text-base`
+              }`}>
+            {Array.from({ length: 5 }).map((_, index) => fameLoading(index))}
+          </View>
+        ) : (
+          // sau 15s mà chưa load xong, khả năng cao là mạng yếu
+          <View style={tw`flex justify-center items-center h-200`}>
+            <Text style={tw`text-[#666] text-base`}>
+              Mạng không ổn định, vui lòng thử lại!
+            </Text>
+          </View>
+        )}
     </>
   );
 });

@@ -15,8 +15,8 @@ import {
   ImageBackground,
 } from 'react-native';
 import LottieView from 'lottie-react-native';
-import React, {memo, useRef} from 'react';
-import {useState, useEffect} from 'react';
+import React, { memo, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import * as Animatable from 'react-native-animatable';
 import {
   Avatar,
@@ -31,8 +31,8 @@ import {
 import Toast from 'react-native-toast-message';
 import Swiper from 'react-native-swiper';
 import tw from 'twrnc';
-import {useSelector} from 'react-redux';
-import {BackgroundImage} from '@rneui/themed/dist/config';
+import { useSelector } from 'react-redux';
+import { BackgroundImage } from '@rneui/themed/dist/config';
 import {
   PRIMARY_COLOR,
   YELLOW_COLOR,
@@ -80,9 +80,9 @@ const bigquestions = [
     question: 'Đây là 1 con vật, bạn hãy đoán tên của nó là gì?',
     image: 0,
     answer: [
-      {id: 1, answer: 'Mèo', isTrue: true},
-      {id: 2, answer: 'Chó', isTrue: false},
-      {id: 3, answer: 'Chuột', isTrue: false},
+      { id: 1, answer: 'Mèo', isTrue: true },
+      { id: 2, answer: 'Chó', isTrue: false },
+      { id: 3, answer: 'Chuột', isTrue: false },
     ],
   },
   {
@@ -90,9 +90,9 @@ const bigquestions = [
     question: 'Đây là 1 con vật, bạn hãy đoán tên của nó là gì?',
     image: 1,
     answer: [
-      {id: 1, answer: 'Mèo', isTrue: false},
-      {id: 2, answer: 'Gà', isTrue: true},
-      {id: 3, answer: 'Chuột', isTrue: false},
+      { id: 1, answer: 'Mèo', isTrue: false },
+      { id: 2, answer: 'Gà', isTrue: true },
+      { id: 3, answer: 'Chuột', isTrue: false },
     ],
   },
   {
@@ -100,9 +100,9 @@ const bigquestions = [
     question: 'Đây là 1 con vật, bạn hãy đoán tên của nó là gì?',
     image: 2,
     answer: [
-      {id: 1, answer: 'Rắn', isTrue: true},
-      {id: 2, answer: 'Nhện', isTrue: false},
-      {id: 3, answer: 'Chuột', isTrue: false},
+      { id: 1, answer: 'Rắn', isTrue: true },
+      { id: 2, answer: 'Nhện', isTrue: false },
+      { id: 3, answer: 'Chuột', isTrue: false },
     ],
   },
   {
@@ -110,9 +110,9 @@ const bigquestions = [
     question: 'Đây là 1 con vật, bạn hãy đoán tên của nó là gì?',
     image: 3,
     answer: [
-      {id: 1, answer: 'Mèo', isTrue: false},
-      {id: 2, answer: 'Gà', isTrue: false},
-      {id: 3, answer: 'Heo', isTrue: true},
+      { id: 1, answer: 'Mèo', isTrue: false },
+      { id: 2, answer: 'Gà', isTrue: false },
+      { id: 3, answer: 'Heo', isTrue: true },
     ],
   },
   {
@@ -120,9 +120,9 @@ const bigquestions = [
     question: 'Đây là 1 con vật, bạn hãy đoán tên của nó là gì?',
     image: 4,
     answer: [
-      {id: 1, answer: 'Mèo', isTrue: false},
-      {id: 2, answer: 'Chó', isTrue: true},
-      {id: 3, answer: 'Vịt', isTrue: false},
+      { id: 1, answer: 'Mèo', isTrue: false },
+      { id: 2, answer: 'Chó', isTrue: true },
+      { id: 3, answer: 'Vịt', isTrue: false },
     ],
   },
   {
@@ -130,9 +130,9 @@ const bigquestions = [
     question: 'Đây là 1 con vật, bạn hãy đoán tên của nó là gì?',
     image: 5,
     answer: [
-      {id: 1, answer: 'Tắc kè', isTrue: false},
-      {id: 2, answer: 'Heo', isTrue: false},
-      {id: 3, answer: 'Bò', isTrue: true},
+      { id: 1, answer: 'Tắc kè', isTrue: false },
+      { id: 2, answer: 'Heo', isTrue: false },
+      { id: 3, answer: 'Bò', isTrue: true },
     ],
   },
   {
@@ -140,9 +140,9 @@ const bigquestions = [
     question: 'Đây là 1 con vật, bạn hãy đoán tên của nó là gì?',
     image: 6,
     answer: [
-      {id: 1, answer: 'Tắc kè', isTrue: true},
-      {id: 2, answer: 'Khỉ', isTrue: false},
-      {id: 3, answer: 'Chuột', isTrue: false},
+      { id: 1, answer: 'Tắc kè', isTrue: true },
+      { id: 2, answer: 'Khỉ', isTrue: false },
+      { id: 3, answer: 'Chuột', isTrue: false },
     ],
   },
   {
@@ -150,9 +150,9 @@ const bigquestions = [
     question: 'Đây là 1 con vật, bạn hãy đoán tên của nó là gì?',
     image: 7,
     answer: [
-      {id: 1, answer: 'Mèo', isTrue: false},
-      {id: 2, answer: 'Heo', isTrue: false},
-      {id: 3, answer: 'Voi', isTrue: true},
+      { id: 1, answer: 'Mèo', isTrue: false },
+      { id: 2, answer: 'Heo', isTrue: false },
+      { id: 3, answer: 'Voi', isTrue: true },
     ],
   },
   {
@@ -160,15 +160,15 @@ const bigquestions = [
     question: 'Đây là 1 con vật, bạn hãy đoán tên của nó là gì?',
     image: 8,
     answer: [
-      {id: 1, answer: 'Thỏ', isTrue: true},
-      {id: 2, answer: 'Heo', isTrue: false},
-      {id: 3, answer: 'Tắc kè', isTrue: false},
+      { id: 1, answer: 'Thỏ', isTrue: true },
+      { id: 2, answer: 'Heo', isTrue: false },
+      { id: 3, answer: 'Tắc kè', isTrue: false },
     ],
   },
 ];
-const GuessName = ({navigation}) => {
-  const {user} = useSelector(state => state.user);
-  const [boxes, setBoxes] = useState(Array.from({length: 9}, (_, i) => i + 1));
+const GuessName = ({ navigation }) => {
+  const { user } = useSelector(state => state.user);
+  const [boxes, setBoxes] = useState(Array.from({ length: 9 }, (_, i) => i + 1));
   const [scrore, setScrore] = useState(0);
   const [indexFocus, setIndexFocus] = useState(null);
   const [miniQuestions, setMiniQuestions] = useState(null);
@@ -197,7 +197,7 @@ const GuessName = ({navigation}) => {
     setMiniQuestions(listQuestion[random]);
   };
 
-  console.log('appearedList', appearedList);
+  // console.log('appearedList', appearedList);
 
   const handlePress = index => {
     setIndexFocus(index);
@@ -278,7 +278,7 @@ const GuessName = ({navigation}) => {
             }
             autoPlay={true}
             loop={false}
-            style={{flexGrow: 1, width: '60%', marginBottom: 100}}
+            style={{ flexGrow: 1, width: '60%', marginBottom: 100 }}
           />
           <View
             style={[
@@ -294,9 +294,8 @@ const GuessName = ({navigation}) => {
               },
             ]}>
             <Text
-              style={tw`text-2xl text-[#333] mt-${
-                isTrueBigQuestion ? '30' : '50'
-              } text-center px-5`}>
+              style={tw`text-2xl text-[#333] mt-${isTrueBigQuestion ? '30' : '50'
+                } text-center px-5`}>
               {isTrueBigQuestion
                 ? 'Chúc mừng, bạn được cộng 50 điểm'
                 : 'Rất tiếc, bạn bị trừ 50 điểm'}
@@ -329,7 +328,7 @@ const GuessName = ({navigation}) => {
     setIsTrueBigQuestion(null);
     setChooseAnswer(null);
     setNumQuestion(numQuestion + 1);
-    setBoxes(Array.from({length: 9}, (_, i) => i + 1));
+    setBoxes(Array.from({ length: 9 }, (_, i) => i + 1));
   };
 
   const contentMiniQuestionModel = () => {
@@ -381,18 +380,17 @@ const GuessName = ({navigation}) => {
     );
   };
 
-  const itemAnswer = ({item, index}) => {
+  const itemAnswer = ({ item, index }) => {
     return (
       <TouchableOpacity
         onPress={() => handleBigAnswer(index, item.isTrue)}
         key={index}
-        style={tw`flex-1 flex-row items-center justify-start bg-[${
-          chooseAnswer != index
+        style={tw`flex-1 flex-row items-center justify-start bg-[${chooseAnswer != index
             ? YELLOW_COLOR
             : item.isTrue
-            ? GREEN_COLOR
-            : PRIMARY_COLOR
-        }] rounded-xl rounded-xl border border-yellow-800  my-2 shadow-lg`}>
+              ? GREEN_COLOR
+              : PRIMARY_COLOR
+          }] rounded-xl rounded-xl border border-yellow-800  my-2 shadow-lg`}>
         <Text style={tw`text-3xl text-black ml-5`}>
           {(index == 0 ? 'A. ' : index == 1 ? 'B. ' : 'C. ') + item.answer}
         </Text>
@@ -411,7 +409,7 @@ const GuessName = ({navigation}) => {
       handleAlert('error', 'Rất tiếc', 'Bạn bị trừ 10 điểm');
     }
   };
-  const ScreenGame = memo(({question}) => {
+  const ScreenGame = memo(({ question }) => {
     // console.log('question', question);
     return (
       <View style={tw`flex-1 flex-col`}>
@@ -452,7 +450,7 @@ const GuessName = ({navigation}) => {
         `}>
           {
             // Câu trả lời
-            question.answer?.map((item, index) => itemAnswer({item, index}))
+            question.answer?.map((item, index) => itemAnswer({ item, index }))
           }
         </View>
       </View>
@@ -467,7 +465,7 @@ const GuessName = ({navigation}) => {
         animated={true}
         backgroundColor="transparent"
         barStyle="dark-content"
-        // hidden={true}
+      // hidden={true}
       />
       <ModalCustom />
 
@@ -491,7 +489,7 @@ const GuessName = ({navigation}) => {
             <Avatar
               size={40}
               rounded
-              source={user?.images ? {uri: user?.images} : {}}
+              source={user?.images ? { uri: user?.images } : {}}
             />
             <View style={tw`flex-2 flex-col items-start ml-2 justify-center`}>
               <Text style={tw`text-sm text-black`}>{user?.fullName}</Text>

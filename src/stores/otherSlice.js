@@ -1,7 +1,7 @@
-import {createSlice} from '@reduxjs/toolkit';
+import { createSlice } from '@reduxjs/toolkit';
 // import {fetchInitialData} from './asyncActions';
-import {Dimensions} from 'react-native';
-import {useSelector} from 'react-redux';
+import { Dimensions } from 'react-native';
+import { useSelector } from 'react-redux';
 
 // const {token, user} = useSelector(state => state.user);
 
@@ -12,6 +12,7 @@ const initialState = {
       : 'portrait',
 
   addressDelivery: [],
+  listTitle: []
 };
 
 const otherSlice = createSlice({
@@ -25,9 +26,22 @@ const otherSlice = createSlice({
     getAddressDelivery: (state, action) => {
       state.addressDelivery = action.payload;
     },
+
+    addTitle: (state, action) => {
+      const title = action.payload
+
+      const findIndex = state.listTitle.findIndex(itemTitle => itemTitle === title)
+
+      if (findIndex !== -1) {
+        state.listTitle.splice(findIndex, 1)
+        state.listTitle.unshift(title)
+      } else {
+        state.listTitle.unshift(title)
+      }
+    },
   },
 });
 
-export const {getOrientation, getAddressDelivery} = otherSlice.actions;
+export const { getOrientation, getAddressDelivery, addTitle } = otherSlice.actions;
 
 export default otherSlice.reducer;

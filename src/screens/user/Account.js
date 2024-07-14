@@ -83,19 +83,12 @@ const Account = ({ navigation }) => {
             },
         },
         {
-            title: 'Ngôn ngữ',
-            icon: 'language',
+            title: 'Đánh giá sản phẩm',
+            icon: 'reviews',
             onPress: () => {
-                navigation.navigate('Language');
+                navigation.navigate('Evaluate');
             },
-        },
-        {
-            title: 'Hỗ trợ',
-            icon: 'help',
-            onPress: () => {
-                navigation.navigate('Support');
-            },
-        },
+        }
     ];
 
     // screen khi da dang nhap
@@ -176,7 +169,7 @@ const Account = ({ navigation }) => {
                                         bottomDivider>
                                         <Text
                                             onPress={() => {
-                                                console.log(user);
+                                                // console.log(user);
                                             }}
                                             style={tw`w-full`}>
                                             Địa chỉ:{' '}
@@ -190,7 +183,7 @@ const Account = ({ navigation }) => {
                                         bottomDivider>
                                         <Text
                                             onPress={() => {
-                                                console.log(user);
+                                                // console.log(user);
                                             }}
                                             style={tw`my-[0.2px] w-full `}>
                                             SDT:{' '}
@@ -202,7 +195,7 @@ const Account = ({ navigation }) => {
                                         bottomDivider>
                                         <Text
                                             onPress={() => {
-                                                console.log(user);
+                                                // console.log(user);
                                             }}
                                             style={tw`my-[0.2px] w-full`}>
                                             Giới tính:{' '}
@@ -216,7 +209,7 @@ const Account = ({ navigation }) => {
                                     <ListItem style={tw`flex justify-start pr-[5px]`}>
                                         <Text
                                             onPress={() => {
-                                                console.log(user);
+                                                // console.log(user);
                                             }}
                                             style={tw`my-[0.2px] w-full `}>
                                             Sinh nhật: {user?.birth ? user?.birth : 'Chưa cập nhật'}

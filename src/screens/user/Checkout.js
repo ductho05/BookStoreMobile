@@ -14,6 +14,7 @@ import { API_KEY, apiMaps, locationShop, paymentMethodList, shippingMethodList }
 import { useScrollToTop } from '@react-navigation/native'
 import { apiCheckout, apiCreateOrderItem, apiUpdateVoucher } from '../../apis/user'
 import { remove, updateListCheckout } from '../../stores/cartSlice'
+import { addTitle } from '../../stores/otherSlice'
 
 const checkExpired = (expiredDate) => {
 
@@ -119,6 +120,7 @@ const Checkout = ({ route, navigation }) => {
                     userId: user?._id,
                     productId: item?.product?._id
                 }))
+                dispatch(addTitle(item.product.title))
             })
             dispatch(updateListCheckout([]))
         } else {
