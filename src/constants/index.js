@@ -1,10 +1,14 @@
-//const isDeploy = process.env.NODE_ENV === 'production';
-const isDeploy = true;
+const isDeploy = process.env.NODE_ENV === 'production';
+//const isDeploy = true;
+
+const wifiPort = {
+  teleWifi: "192.168.48.147",
+}
 
 export const API_URL =
-  isDeploy === true
+  isDeploy === false
     ? 'https://bookstore-ta-v3.onrender.com/bookstore/api/v1'
-    : 'http://192.168.3.249:3000/bookstore/api/v1';
+    : `${wifiPort.teleWifi}/bookstore/api/v1`;
 // export const API_URL = 'http://192.168.43.204:3000/bookstore/api/v1'
 // export const API_URL = 'http://192.168.1.65:3000/bookstore/api/v1'
 
