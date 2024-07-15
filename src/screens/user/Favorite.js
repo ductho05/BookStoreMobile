@@ -55,9 +55,9 @@ const Favorite = ({ navigation }) => {
 
   const onRefresh = React.useCallback(async () => {
     setRefreshing(true);
-    console.log('1dsa', token, user?._id);
+    //console.log('1dsa', token, user?._id);
     const response = await apiGetFavoritesForMe(token + user?._id);
-    console.log('respons2e21', response.status, response.data.data);
+    //console.log('respons2e21', response.status, response.data.data);
     if (response.status === 200) {
       dispatch(getFavorites(response?.data?.data));
       setRefreshing(false);
@@ -155,7 +155,7 @@ const Favorite = ({ navigation }) => {
                 size={22}
                 style={tw`mr-[1px]`}
                 onPress={async () => {
-                  console.log('item123', item?.productid?._id);
+                  //console.log('item123', item?.productid?._id);
                   setIsdeleting(true);
                   const res = await apiDeleteFavorites(
                     token,
@@ -163,11 +163,11 @@ const Favorite = ({ navigation }) => {
                     item?.productid?._id,
                   );
                   if (res.status == 200) {
-                    console.log(
-                      'r1232es',
-                      favorites[0]._id,
-                      res?.data.data._id,
-                    );
+                    // console.log(
+                    //   'r1232es',
+                    //   favorites[0]._id,
+                    //   res?.data.data._id,
+                    // );
                     dispatch(
                       getFavorites(
                         favorites.filter(

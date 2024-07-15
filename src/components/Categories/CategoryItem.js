@@ -17,7 +17,7 @@ const CategoryItem = ({ category }) => {
                 source={{ uri: category.image }}
                 style={tw`w-[50px] h-[50px]`}
             />
-            <Text style={tw`text-[13px] text-center mt-[10px] max-w-[100px]`}>
+            <Text style={tw`text-[13px] text-center mt-[10px] max-w-[100px] text-[#333]`}>
                 {category.title}
             </Text>
         </TouchableOpacity>

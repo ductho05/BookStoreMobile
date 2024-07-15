@@ -47,7 +47,7 @@ const ProductFrame = ({ isSlide, productList, title, onPress }) => {
                     ?
                     <View style={[tw`flex-row items-center p-[10px]`, { backgroundColor: PINK_COLOR }]}>
                         <Image style={tw`w-[20px] h-[20px]`} source={require('../../assets/images/icons/ico_dealhot.png')} />
-                        <Text style={tw`ml-[6px] font-bold`}>
+                        <Text style={tw`ml-[6px] font-bold text-[#333]`}>
                             {title}
                         </Text>
                     </View>

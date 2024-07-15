@@ -47,7 +47,7 @@ const Voucher = ({ navigation }) => {
     }
   }, []);
 
-  console.log("voucehr", vouchers)
+  //console.log("voucehr", vouchers)
 
   const icon = (name, size = 18, color = 'white', onPress) => {
     return (

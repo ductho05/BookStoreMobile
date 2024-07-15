@@ -16,13 +16,15 @@ import notifee from '@notifee/react-native';
 import Button from '../../components/Button'
 import { useNotification } from '../../hooks/useNotification'
 import { useLinkTo } from '@react-navigation/native'
+import FlashSale from '../../components/FlashSale'
 
 const Home = ({ navigation }) => {
 
     const linkTo = useLinkTo()
     const flatListRef = React.useRef()
-    const { loading, productsHots, categoryBooks, slideList, learnBooks } = useSelector(state => state.data)
+    const { loading, productsHots, categoryBooks, slideList, learnBooks, productFlashSales } = useSelector(state => state.data)
     const [scrollPosition, setScrollPosition] = React.useState(0)
+    const [productSaleHome, setProductSaleHome] = React.useState([])
     const dispatch = useDispatch()
     const { displayNotification } = useNotification()
 
@@ -91,21 +93,6 @@ const Home = ({ navigation }) => {
         navigation.navigate("Product", { keywords: null, categoryId: null })
     }
 
-    const handleToCategoryProduct = (categoryId) => {
-        navigation.navigate("Product", { keywords: null, categoryId: categoryId })
-    }
-
-    const onDisplayNotification = async () => {
-
-        displayNotification({
-            title: 'Thông báo đơn hàng',
-            description: 'Đơn hàng của bạn đã được giao thành công!',
-            image: 'https://www.advotics.com/wp-content/uploads/2022/02/surat-jalan-01-1-4-1536x984.png',
-            //largeImage: 'https://salt.tikicdn.com/ts/product/69/2c/57/9d96bec7a87b33daf7fae7a717f2058c.jpg'
-        })
-        // linkTo('/product-detail/65646a7d1d2b3aa954b7d9d5')
-    }
-
     return (
         <View style={tw`mt-[${StatusBar.currentHeight}px]`}>
             {
@@ -137,6 +124,10 @@ const Home = ({ navigation }) => {
                                     </Swiper>
                                     <View >
                                         <Categories.Categories />
+                                        {
+                                            productFlashSales.length > 0 &&
+                                            <FlashSale products={productFlashSales} />
+                                        }
                                         <ProductFrame.ProductFrame
                                             title="Sản phẩm được quan tâm"
                                             productList={productsHots}

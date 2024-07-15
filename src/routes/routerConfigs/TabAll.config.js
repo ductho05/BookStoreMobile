@@ -29,6 +29,9 @@ import AuthenChangeEmail from "../../screens/user/AuthenChangeEmail"
 import AddAddress from "../../screens/user/AddAddress"
 import Checkout from "../../screens/user/Checkout"
 import CheckoutSuccess from "../../screens/user/CheckoutSuccess"
+import Evaluate from "../../screens/user/Evaluate"
+import EvaluateProduct from "../../screens/user/EvaluateProduct"
+import OrderDetail from "../../screens/user/OrderDetail"
 
 const TabAllRoutes = [
   {
@@ -154,6 +157,18 @@ const TabAllRoutes = [
   {
     name: 'CheckoutSuccess',
     component: CheckoutSuccess
+  },
+  {
+    name: 'Evaluate',
+    component: Evaluate
+  },
+  {
+    name: 'EvaluateProduct',
+    component: EvaluateProduct
+  },
+  {
+    name: 'OrderDetail',
+    component: OrderDetail
   }
 ];
 

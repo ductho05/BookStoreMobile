@@ -10,10 +10,12 @@ import Loading from '../../components/loaders/Loading'
 import Toast from 'react-native-toast-message'
 import { BLUE_COLOR, BORDER_COLOR, PINK_COLOR, PRIMARY_COLOR, YELLOW_COLOR } from '../../styles/color.global'
 import { CheckBox } from '@rneui/themed';
-import { API_KEY, apiMaps, locationShop, paymentMethodList, shippingMethodList } from '../../constants'
+import { API_KEY, apiMaps, appPath, locationShop, orderImages, paymentMethodList, shippingMethodList } from '../../constants'
 import { useScrollToTop } from '@react-navigation/native'
 import { apiCheckout, apiCreateOrderItem, apiUpdateVoucher } from '../../apis/user'
 import { remove, updateListCheckout } from '../../stores/cartSlice'
+import { addTitle } from '../../stores/otherSlice'
+import { apiSendNotification } from '../../apis/data'
 
 const checkExpired = (expiredDate) => {
 
@@ -109,16 +111,34 @@ const Checkout = ({ route, navigation }) => {
             if (voucher) {
                 await apiUpdateVoucher(voucher._id, { ...voucher, status: false })
             }
+
+            const filter = 'admin'
+            const notification = {
+                title: 'Thông báo đơn hàng',
+                description: `Khách hàng ${user.fullName} vừa mua đơn hàng mã ${order._id}`,
+                image: orderImages,
+                url: `${appPath}/account/order/detail/${order._id}`,
+                user: user._id,
+                largeImage: orderItems[0].product.images,
+                linking: 'null'
+            }
+            await apiSendNotification(token, {
+                filter: filter,
+                notification: notification
+            })
             setLoading(false)
 
             setTimeout(() => {
-                navigation.navigate('CheckoutSuccess')
+                navigation.navigate('CheckoutSuccess', {
+                    orderId: order._id
+                })
             }, 500)
             checkoutData.forEach(item => {
                 dispatch(remove({
                     userId: user?._id,
                     productId: item?.product?._id
                 }))
+                dispatch(addTitle(item.product.title))
             })
             dispatch(updateListCheckout([]))
         } else {

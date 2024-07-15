@@ -83,19 +83,12 @@ const Account = ({ navigation }) => {
             },
         },
         {
-            title: 'Ngôn ngữ',
-            icon: 'language',
+            title: 'Đánh giá sản phẩm',
+            icon: 'reviews',
             onPress: () => {
-                navigation.navigate('Language');
+                navigation.navigate('Evaluate');
             },
-        },
-        {
-            title: 'Hỗ trợ',
-            icon: 'help',
-            onPress: () => {
-                navigation.navigate('Support');
-            },
-        },
+        }
     ];
 
     // screen khi da dang nhap
@@ -120,10 +113,10 @@ const Account = ({ navigation }) => {
                     <View
                         style={tw`flex-1 px-2 items-${orientation != 'portrait' ? 'center' : 'start'
                             }`}>
-                        <Text style={tw`my-[0px] text-lg`}>{user?.fullName}</Text>
+                        <Text style={tw`my-[0px] text-lg text-[#333]`}>{user?.fullName}</Text>
                         {/* <Timeline /> */}
-                        <Text style={tw`my-[0px] text-sm`}>{user?.email}</Text>
-                        <Text style={tw`my-[0px] text-sm`}>
+                        <Text style={tw`my-[0px] text-sm text-[#333]`}>{user?.email}</Text>
+                        <Text style={tw`my-[0px] text-sm text-[#333]`}>
                             Điểm tích lũy{' '}
                             {
                                 // năm nay
@@ -135,7 +128,7 @@ const Account = ({ navigation }) => {
                         <View
                             style={tw`flex flex-row  ${orientation != 'portrait' ? 'justify-evenly' : 'justify-between'
                                 } items-center w-full`}>
-                            <Text style={tw`text-xl font-bold`}> {point} TAS</Text>
+                            <Text style={tw`text-xl font-bold text-[#333]`}> {point} TAS</Text>
                             <TouchableOpacity
                                 onPress={() => {
                                     handleLogout();
@@ -160,7 +153,7 @@ const Account = ({ navigation }) => {
                             <View style={tw`flex-row justify-between items-center`}>
                                 <View style={tw`flex-row justify-start items-center`}>
                                     {icon('person')}
-                                    <Text style={tw`text-lg`}>Thông tin cá nhân</Text>
+                                    <Text style={tw`text-lg text-[#333]`}>Thông tin cá nhân</Text>
                                 </View>
                                 <TouchableOpacity
                                     onPress={handleToEditProfile}
@@ -176,9 +169,9 @@ const Account = ({ navigation }) => {
                                         bottomDivider>
                                         <Text
                                             onPress={() => {
-                                                console.log(user);
+                                                // console.log(user);
                                             }}
-                                            style={tw`w-full`}>
+                                            style={tw`w-full text-[#333]`}>
                                             Địa chỉ:{' '}
                                             {user?.address
                                                 ? user?.address + (user?.city && `, ${user?.city}`)
@@ -190,9 +183,9 @@ const Account = ({ navigation }) => {
                                         bottomDivider>
                                         <Text
                                             onPress={() => {
-                                                console.log(user);
+                                                // console.log(user);
                                             }}
-                                            style={tw`my-[0.2px] w-full `}>
+                                            style={tw`my-[0.2px] w-full text-[#333]`}>
                                             SDT:{' '}
                                             {user?.phoneNumber ? user?.phoneNumber : 'Chưa cập nhật'}
                                         </Text>
@@ -202,9 +195,9 @@ const Account = ({ navigation }) => {
                                         bottomDivider>
                                         <Text
                                             onPress={() => {
-                                                console.log(user);
+                                                // console.log(user);
                                             }}
-                                            style={tw`my-[0.2px] w-full`}>
+                                            style={tw`my-[0.2px] w-full text-[#333]`}>
                                             Giới tính:{' '}
                                             {user?.gender
                                                 ? user?.gender == 'male'
@@ -216,9 +209,9 @@ const Account = ({ navigation }) => {
                                     <ListItem style={tw`flex justify-start pr-[5px]`}>
                                         <Text
                                             onPress={() => {
-                                                console.log(user);
+                                                // console.log(user);
                                             }}
-                                            style={tw`my-[0.2px] w-full `}>
+                                            style={tw`my-[0.2px] w-full text-[#333]`}>
                                             Sinh nhật: {user?.birth ? user?.birth : 'Chưa cập nhật'}
                                         </Text>
                                     </ListItem>
@@ -236,7 +229,7 @@ const Account = ({ navigation }) => {
                                     style={tw`flex-row w-full py-3 border-b border-gray-100 justify-between items-center`}>
                                     <View style={tw`flex-row justify-start items-center`}>
                                         {icon(item.icon)}
-                                        <Text style={tw`text-lg ml-2`}>{item.title}</Text>
+                                        <Text style={tw`text-lg ml-2 text-[#333]`}>{item.title}</Text>
                                     </View>
                                     <Text style={tw`text-sm ml-2 text-gray-500`}>Xem thêm</Text>
                                 </TouchableOpacity>

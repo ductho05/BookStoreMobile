@@ -16,7 +16,8 @@ import {
     // listPathStatusOrder,
 } from '../constants/index';
 import { useSelector } from 'react-redux'
-import { apiGetProfile } from '../apis/user';
+import { apiGetMyEvaluate, apiGetProfile, apiMyOrderItem } from '../apis/user';
+import { apiGetProductFlashSale } from '../apis/product';
 
 export const fetchInitialData = createAsyncThunk(
     'data/initialData',
@@ -26,6 +27,8 @@ export const fetchInitialData = createAsyncThunk(
             const categoryBooks = await apiGetProductCategory(listPathCategory[0].path);
             const learnBooks = await apiGetProductCategory(listPathLearn[0].path);
             const slideList = await apiGetSlideList();
+            const flashSale = await apiGetProductFlashSale()
+
             console.log('da vao day', token);
 
             // load khi đã đăng nhập nếu không thì trả []
@@ -86,7 +89,8 @@ export const fetchInitialData = createAsyncThunk(
                 completeMyOrder: completeMyOrder.data.data,
                 cancelMyOrder: cancelMyOrder.data.data,
                 confirmMyOrder: confirmMyOrder.data.data,
-                categories: categories.data.data
+                categories: categories.data.data,
+                productFlashSales: flashSale.data.data
             };
         } catch (error) {
             console.log('error', error);
@@ -103,4 +107,36 @@ export const checkUser = createAsyncThunk(
         return resposne.data.data
 
     }
-) 
+)
+
+export const fetchEvaluate = createAsyncThunk(
+    'data/fetchEvaluate',
+    async (token) => {
+        let listNotYetComment = []
+        let listTemp = []
+        const seen = new Set()
+
+        const comments = await apiGetMyEvaluate(token)
+        const myProductOrder = await apiMyOrderItem(token)
+        if (myProductOrder.data.data && comments.data.data) {
+            myProductOrder.data.data.forEach(order => {
+                if (!comments.data.data.some(comment => comment.product._id === order.product._id)) {
+                    listTemp.push({ orderId: order._id, product: order.product })
+                }
+            })
+        }
+
+        listTemp.forEach(item => {
+            if (!seen.has(item.product._id)) {
+
+                seen.add(item.product._id)
+                listNotYetComment.push({ orderId: item.orderId, product: item.product })
+            }
+        })
+
+        return {
+            listCommented: comments.data.data,
+            listNotYetComment: listNotYetComment
+        }
+    }
+)

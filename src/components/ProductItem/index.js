@@ -4,19 +4,21 @@ import tw from 'twrnc'
 import { BORDER_COLOR, PRIMARY_COLOR } from '../../styles/color.global'
 import numeral from 'numeral'
 import { useNavigation } from '@react-navigation/native'
+import { LinearProgress } from '@rneui/themed';
 
-const ProductItem = ({ product, isSlide }) => {
+const ProductItem = ({ product, isSlide, isFlashSale }) => {
 
     const navigation = useNavigation()
 
     const handleToDetail = () => {
+
         navigation.navigate('ProductDetail', {
             productId: product._id,
         })
     }
 
     return (
-        <TouchableOpacity onPress={handleToDetail} style={[tw`p-[10px] z-1 bg-white border mb-[10px] mx-[5px] rounded-[6px] ${isSlide ? "w-[166px]" : "w-[47%]"}`, { borderColor: BORDER_COLOR }]}>
+        <TouchableOpacity onPress={handleToDetail} style={[tw`p-[10px] z-1 bg-white ${isFlashSale ? '' : 'border'} mb-[10px] mx-[5px] rounded-[6px] ${isSlide ? "w-[166px]" : "w-[47%]"}`, { borderColor: BORDER_COLOR }]}>
             <View style={tw`w-full items-center`}>
                 <Image
                     source={{ uri: product.images }}
@@ -43,7 +45,7 @@ const ProductItem = ({ product, isSlide }) => {
             <Text style={[tw`text-[12px]`, { textDecorationLine: 'line-through', textDecorationStyle: 'solid' }]}>
                 {numeral(product.old_price).format('0,0')} đ
             </Text>
-            <View style={tw`flex-row items-center justify-end`}>
+            <View style={tw`flex-row items-center justify-end ${isFlashSale ? 'hidden' : ''}`}>
                 <Text style={[tw`text-[12px]`]}>
                     Đã bán:
                 </Text>
@@ -51,6 +53,14 @@ const ProductItem = ({ product, isSlide }) => {
                     {product.sold}
                 </Text>
             </View>
+            {
+                isFlashSale &&
+                <View style={tw`mt-[10px]`}>
+                    <LinearProgress value={0.5} style={{ height: 10, borderRadius: 6 }} />
+                    <Text>Đã bán 20</Text>
+                </View>
+            }
+
         </TouchableOpacity>
     )
 }

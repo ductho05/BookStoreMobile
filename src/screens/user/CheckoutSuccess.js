@@ -3,9 +3,10 @@ import React from 'react'
 import tw from 'twrnc'
 import { useDispatch } from 'react-redux'
 
-const CheckoutSuccess = ({ navigation }) => {
+const CheckoutSuccess = ({ route, navigation }) => {
 
     const dispatch = useDispatch()
+    const { orderId } = route.params || null
     const handleBack = () => {
         navigation.navigate('TabBottom')
     }
@@ -13,7 +14,10 @@ const CheckoutSuccess = ({ navigation }) => {
     const handleToMyOrder = () => {
         //dispatch(updateLoaded())
         setTimeout(() => {
-            navigation.navigate('MyOrder')
+            navigation.navigate('OrderDetail', {
+                isOrderSuccess: true,
+                orderId: orderId
+            })
         }, 200)
     }
 

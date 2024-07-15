@@ -1,26 +1,25 @@
 import React from 'react';
-import {View, Text, TouchableOpacity} from 'react-native';
+import { View, Text, TouchableOpacity } from 'react-native';
 import tw from 'twrnc';
 
-const TimelineItem = ({title, description, onPress, achieved, index}) => {
+const TimelineItem = ({ title, description, onPress, achieved, index }) => {
   return (
     <TouchableOpacity
       onPress={onPress}
       style={tw`flex-row items-center w-full my-2`}>
       <View
-        style={tw`w-7 h-7 rounded-full bg-${
-          achieved ? 'green' : 'gray'
-        }-400 shadow-lg mr-2`}
+        style={tw`w-7 h-7 rounded-full bg-${achieved ? 'green' : 'gray'
+          }-400 shadow-lg mr-2`}
       />
       <View style={tw`flex-1 border-b border-gray-100 pb-2`}>
-        <Text style={tw`font-bold mb-1`}>{title}</Text>
-        <Text>{description}</Text>
+        <Text style={tw`font-bold mb-1 text-[#333]`}>{title}</Text>
+        <Text style={tw`text-[#333]`}>{description}</Text>
       </View>
     </TouchableOpacity>
   );
 };
 
-const Timeline = ({point}) => {
+const Timeline = ({ point }) => {
   const timelineData = [
     {
       title: 'Mốc 10 điểm',

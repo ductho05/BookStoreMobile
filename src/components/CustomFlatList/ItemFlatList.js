@@ -29,12 +29,20 @@ import { useMemo } from 'react';
 const ItemFlatList = memo(({ item, index }) => {
   // console.log('day ne troi ', item, index);
 
+  const navigation = useNavigation()
+
   const formatToVND = number => {
     return new Intl.NumberFormat('vi-VN', {
       style: 'currency',
       currency: 'VND',
     }).format(number);
   };
+
+  const handleToOrderDetail = () => {
+    navigation.navigate('OrderDetail', {
+      orderId: item._id
+    })
+  }
 
   const icon = (name, size = 18, color = 'white', onPress) => {
     return (
@@ -50,7 +58,8 @@ const ItemFlatList = memo(({ item, index }) => {
   };
   // console.log('item1222 ', index);
   return (
-    <View
+    <TouchableOpacity
+      onPress={handleToOrderDetail}
       key={index}
       style={tw`px-2 py-1 h-38 bg-white border-b border-gray-100 flex flex-row`}>
       <View style={tw`flex-3 flex-col flex py-[10px] px-[7px]`}>
@@ -139,7 +148,7 @@ const ItemFlatList = memo(({ item, index }) => {
           </TouchableOpacity>
         </View>
       </View>
-    </View>
+    </TouchableOpacity>
   );
 });
 

@@ -16,6 +16,7 @@ export const API_ADDRESS = 'https://vapi.vnappmob.com'
 export const apiMaps = 'https://api.mapbox.com/'
 export const API_KEY = 'pk.eyJ1IjoiZHVjdGhvIiwiYSI6ImNsanlmem5kaDA0OTIzZnFnMGpmMzhlZ2sifQ.Tm8Tc--X7kKEwGD3p7N1gw';
 export const locationShop = [106.762681, 10.854211]
+export const API_RECOMMENDATIONS = 'http://192.168.62.29:5000/bookstore/api/v1/recommendations'
 
 export const listPathHots = [
   {
@@ -148,3 +149,29 @@ export const paymentMethodList = [
 export const shippingMethodList = [
   'Giao hàng tiêu chuẩn'
 ]
+
+export const STATUS = {
+  CHOXACNHAN: "CHOXACNHAN",
+  DANGGIAO: "DANGGIAO",
+  HOANTHANH: "HOANTHANH",
+  DAHUY: "DAHUY"
+}
+
+export const orderImages = 'https://www.advotics.com/wp-content/uploads/2022/02/surat-jalan-01-1-4-1536x984.png';
+export const registerImages = 'https://quicklaunch.io/wp-content/uploads/2019/10/user-registration.png';
+export const cancelOrderImage =
+  'https://commercemarketplace.adobe.com/media/catalog/product/f/8/f80e_cancel-order-240x240_3.png';
+
+export const flashSaleImage =
+  'https://img.freepik.com/free-vector/special-flash-sale-modern-banner-design-vector-illustration_1017-38337.jpg';
+
+export const lockImage =
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSg-9Ld8ptDN8JEy1oAwnE3etK_9Zn-xaAeEw&usqp=CAU';
+export const unLockImage =
+  'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSWOKkU25svJ7cINb3fMH2Pxo_6KOGUm-A9JQ&usqp=CAU';
+
+export const voucherImage = 'https://cdn-www.vinid.net/483a744d-cach-san-voucher.jpg';
+
+export const appPath = isDeploy ? 'https://bookstore-ta.vercel.app' : 'http://localhost:3456';
+
+export const evaluateImage = 'https://cdn-icons-png.freepik.com/512/7870/7870367.png'

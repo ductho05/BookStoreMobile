@@ -5,7 +5,7 @@ import { Tab, Text, TabView } from '@rneui/themed';
 import { PRIMARY_COLOR } from '../../styles/color.global';
 import { Dimensions } from 'react-native';
 import { useSelector } from 'react-redux';
-const CustomTab = ({ data }) => {
+const CustomTab = ({ data, tabWidth }) => {
   const [index, setIndex] = useState(0);
   const { orientation } = useSelector(state => state.other);
 
@@ -19,17 +19,19 @@ const CustomTab = ({ data }) => {
           backgroundColor: PRIMARY_COLOR,
           height: 1.5,
           width:
-            orientation != 'portrait'
-              ? Dimensions.get('window').width / 5
-              : Dimensions.get('window').width / 4,
+            tabWidth ? tabWidth :
+              orientation != 'portrait'
+                ? Dimensions.get('window').width / 5
+                : Dimensions.get('window').width / 4,
         }}
         containerStyle={{
           backgroundColor: 'white',
           height: 60,
           width:
-            orientation != 'portrait'
-              ? Dimensions.get('window').width / 5
-              : Dimensions.get('window').width / 4,
+            tabWidth ? tabWidth :
+              orientation != 'portrait'
+                ? Dimensions.get('window').width / 5
+                : Dimensions.get('window').width / 4,
           justifyContent: 'space-around',
           borderBottomWidth: 1.5,
           borderBottomColor: 'gray',

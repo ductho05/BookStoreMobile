@@ -3,7 +3,7 @@ import React from 'react'
 import tw from 'twrnc'
 import { BORDER_COLOR, PRIMARY_COLOR, YELLOW_COLOR } from '../../styles/color.global'
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5'
-import { apiGetProductByCategory, apiGetProductById, apiGetProductComment, apiGetProductRate } from '../../apis/product'
+import { apiGetProductByCategory, apiGetProductById, apiGetProductComment, apiGetProductRate, apigetRecommendProduct } from '../../apis/product'
 import { Rating } from 'react-native-ratings'
 import numeral from 'numeral'
 import { useSelector, useDispatch } from 'react-redux'
@@ -17,12 +17,14 @@ import { add } from '../../stores/cartSlice'
 import Dialog from "react-native-dialog"
 import { apiAddFavorite } from '../../apis/data'
 import { updateFavorites } from '../../stores/dataSlice'
+import { addTitle } from '../../stores/otherSlice'
+import CustomCountDown from '../../components/CustomCountDown'
 
 const ProductDetail = ({ route, navigation }) => {
 
     const useRef = React.useRef()
-    const { productId } = route.params
-    const { productsHots, favorites } = useSelector(state => state.data)
+    const { productId, isGoToComment } = route.params || null
+    const { productsHots, favorites, productFlashSales } = useSelector(state => state.data)
     const { user, isLoggedIn, token } = useSelector(state => state.user)
     const { data } = useSelector(state => state.cart)
     const [cartData, setCartData] = React.useState([])
@@ -35,6 +37,13 @@ const ProductDetail = ({ route, navigation }) => {
     const [quantity, setQuantity] = React.useState(1)
     const [showDialog, setShowDialog] = React.useState(false)
     const [isAddFavorite, setIsAddFavorite] = React.useState(false)
+    const [isFlashSale, setIsFlashSale] = React.useState(false)
+
+    const checkIsFlashSale = () => {
+        const findIndex = productFlashSales.findIndex(item => item.product._id === productId)
+
+        setIsFlashSale(findIndex !== -1)
+    }
 
     const checkIndex = () => {
 
@@ -144,6 +153,12 @@ const ProductDetail = ({ route, navigation }) => {
         }
     }
 
+    const handleScroll = () => {
+        if (isGoToComment) {
+            useRef.current?.scrollToEnd({ animated: false })
+        }
+    }
+
     const fetchProduct = async (id) => {
 
         setLoading(true)
@@ -155,13 +170,12 @@ const ProductDetail = ({ route, navigation }) => {
         }
     }
 
-    const fetchProductCategory = async (categoryId, categoryName) => {
+    const fetchRecommendedProducts = async (title) => {
 
-        const response = await apiGetProductByCategory(categoryId)
+        const response = await apigetRecommendProduct(title)
         setLoading(false)
 
         if (response.status === 200) {
-
             setProductCategory(response.data.data)
         }
     }
@@ -227,6 +241,20 @@ const ProductDetail = ({ route, navigation }) => {
 
     React.useEffect(() => {
 
+        const timeOut = setTimeout(() => {
+            if (product) {
+                dispatch(addTitle(product?.title))
+            }
+        }, 5000)
+
+        return () => {
+            clearTimeout(timeOut)
+        }
+
+    }, [product])
+
+    React.useEffect(() => {
+
         handleToTop()
         fetchProduct(productId)
         fetchRate(productId)
@@ -237,9 +265,14 @@ const ProductDetail = ({ route, navigation }) => {
     React.useEffect(() => {
 
         if (product) {
-            fetchProductCategory(product?.categoryId?._id, product?.categoryId?.name)
+            fetchRecommendedProducts(product.title)
         }
     }, [product])
+
+    React.useEffect(() => {
+
+        checkIsFlashSale()
+    }, [productId, productFlashSales])
 
     return (
         <View style={tw`relative mb-[50px] h-[100%]`}>
@@ -292,6 +325,7 @@ const ProductDetail = ({ route, navigation }) => {
                 </View>
             </View>
             <FlatList
+                onContentSizeChange={handleScroll}
                 ref={useRef}
                 keyExtractor={(item) => item}
                 data={[0]}
@@ -312,6 +346,9 @@ const ProductDetail = ({ route, navigation }) => {
                                             />
                                         }
                                     </View>
+                                    {
+                                        isFlashSale && <CustomCountDown isDetail={true} />
+                                    }
                                     <View style={tw`bg-white py-[10px] px-[16px]`}>
                                         <Text style={tw`text-[#333] text-[16px]`}>
                                             {product?.title}
@@ -367,14 +404,17 @@ const ProductDetail = ({ route, navigation }) => {
                                             </Text>
                                         </View>
                                     </View>
-                                    <View style={tw`bg-white mt-[10px]`}>
-                                        <Text style={tw`uppercase px-[10px] py-[10px] text-[#333] font-bold`}>
-                                            Sản phẩm liên quan
-                                        </Text>
-                                        {
-                                            RenderSlideList(productCategory)
-                                        }
-                                    </View>
+                                    {
+                                        productCategory.length > 0 &&
+                                        <View style={tw`bg-white mt-[10px]`}>
+                                            <Text style={tw`uppercase px-[10px] py-[10px] text-[#333] font-bold`}>
+                                                Sản phẩm liên quan
+                                            </Text>
+                                            {
+                                                RenderSlideList(productCategory)
+                                            }
+                                        </View>
+                                    }
                                     <View style={tw`bg-white mt-[10px]`}>
                                         <Text style={tw`uppercase px-[10px] pt-[10px] text-[#333] font-bold`}>
                                             TA BOOKSTORE giới thiệu
