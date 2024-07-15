@@ -5,7 +5,7 @@ import tw from 'twrnc'
 import { useDispatch, useSelector } from 'react-redux'
 import { Icon } from '@rneui/themed'
 import { formatDate, formatPaymentMethod, formatToVND } from '../../helper/index'
-import { STATUS } from '../../constants/index'
+import { appPath, cancelOrderImage, orderImages, STATUS } from '../../constants/index'
 // import { updateLoaded } from '../../stores/orderSlice'
 import Toast from 'react-native-toast-message'
 
@@ -13,7 +13,7 @@ import { BORDER_COLOR, PRIMARY_COLOR } from '../../styles/color.global'
 import Loading from '../../components/loaders/Loading'
 import { apiGetOrderbyId, apiGetOrderItembyOrder, apiupdateOrder } from '../../apis/user'
 import { getCancelMyOrder, getCompleteMyOrder, getConfirmMyOrder, getDeliveryMyOrder, setReloadOrder } from '../../stores/dataSlice'
-import { apiGetStatusOrderForMe } from '../../apis/data'
+import { apiGetStatusOrderForMe, apiSendNotification } from '../../apis/data'
 
 const Item = ({ item, border = true }) => {
 
@@ -36,8 +36,8 @@ const Item = ({ item, border = true }) => {
 
 const OrderDetail = ({ route, navigation }) => {
 
-    const { orderId } = route.params || null
-    const { token } = useSelector(state => state.user)
+    const { orderId, isOrderSuccess } = route.params || null
+    const { token, user } = useSelector(state => state.user)
     const dispatch = useDispatch()
     const [order, setOrder] = React.useState()
     const [orderItems, setOrderItems] = React.useState([])
@@ -60,10 +60,10 @@ const OrderDetail = ({ route, navigation }) => {
     }
 
     const reloadData = async () => {
-        const confirmMyOrder = await apiGetStatusOrderForMe('01' + '0' + token)
-        const deliveryMyOrder = await apiGetStatusOrderForMe('01' + '1' + token)
-        const completeMyOrder = await apiGetStatusOrderForMe('01' + '2' + token)
-        const cancelMyOrder = await apiGetStatusOrderForMe('01' + '3' + token)
+        const confirmMyOrder = await apiGetStatusOrderForMe('01' + '0' + token + user?._id)
+        const deliveryMyOrder = await apiGetStatusOrderForMe('01' + '1' + token + user?._id)
+        const completeMyOrder = await apiGetStatusOrderForMe('01' + '2' + token + user?._id)
+        const cancelMyOrder = await apiGetStatusOrderForMe('01' + '3' + token + user?._id)
 
         dispatch(getConfirmMyOrder(confirmMyOrder.data.data))
         dispatch(getDeliveryMyOrder(deliveryMyOrder.data.data))
@@ -86,11 +86,26 @@ const OrderDetail = ({ route, navigation }) => {
 
     const reBuyOrder = async () => {
         setLoading(true)
-        const response = await apiupdateOrder(token, orderId, { status: STATUS.DANGGIAO })
+        const response = await apiupdateOrder(token, orderId, { status: STATUS.CHOXACNHAN })
 
         if (response.status === 200) {
+            const filter = 'admin'
+            const notification = {
+                title: 'Thông báo đơn hàng',
+                description: `Khách hàng ${user.fullName} vừa mua lại đơn hàng mã ${orderId}`,
+                image: orderImages,
+                url: `${appPath}/account/order/detail/${orderId}`,
+                user: user._id,
+                largeImage: orderItems[0].product.images,
+                linking: 'null'
+            }
+            await apiSendNotification(token, {
+                filter: filter,
+                notification: notification
+            })
 
             await reloadData()
+            setLoading(false)
             Toast.show({
                 type: 'success',
                 text1: 'Mua lại đơn hàng thành công!'
@@ -104,7 +119,6 @@ const OrderDetail = ({ route, navigation }) => {
                 type: 'error'
             })
         }
-        setLoading(false)
     }
 
     const onCancel = async () => {
@@ -114,7 +128,22 @@ const OrderDetail = ({ route, navigation }) => {
 
         if (response.status === 200) {
 
+            const filter = 'admin'
+            const notification = {
+                title: 'Thông báo đơn hàng',
+                description: `Khách hàng ${user.fullName} vừa hủy đơn hàng mã ${orderId}`,
+                image: cancelOrderImage,
+                url: `${appPath}/account/order/detail/${orderId}`,
+                user: user._id,
+                largeImage: orderItems[0].product.images,
+                linking: 'null'
+            }
+            await apiSendNotification(token, {
+                filter: filter,
+                notification: notification
+            })
             await reloadData()
+            setLoading(false)
             Toast.show({
                 type: 'success',
                 text1: 'Hủy đơn hàng thành công!'
@@ -128,7 +157,6 @@ const OrderDetail = ({ route, navigation }) => {
                 type: 'error'
             })
         }
-        setLoading(false)
     }
 
     const handleToChooseAddress = () => {
@@ -172,8 +200,8 @@ const OrderDetail = ({ route, navigation }) => {
             {
                 loading && <Loading />
             }
-            <Header title="Chi tiết đơn hàng" />
-            <ScrollView >
+            <Header navigation={navigation} title="Chi tiết đơn hàng" isOrderSuccess={isOrderSuccess} />
+            <ScrollView style={tw`flex-1`}>
                 <View style={tw`px-[20px] py-[10px] bg-white`}>
                     <View style={tw`flex-row justify-start items-center`}>
                         <Icon
@@ -189,7 +217,7 @@ const OrderDetail = ({ route, navigation }) => {
                             {order?.phone}
                         </Text>
                     </View>
-                    <Text style={tw`mt-[6px]`}>{`${order?.address}, ${order?.wards}, ${order?.districs}, ${order?.city}`}</Text>
+                    <Text style={tw`mt-[6px] text-[#333]`}>{`${order?.address}, ${order?.wards}, ${order?.districs}, ${order?.city}`}</Text>
                 </View>
                 <View style={tw`px-[20px] py-[10px] bg-white mt-[10px]`}>
                     {
@@ -201,34 +229,34 @@ const OrderDetail = ({ route, navigation }) => {
                 <View style={tw`px-[20px] py-[10px] bg-white mt-[10px]`}>
                     <Text style={tw`font-bold text-[#333]`}>Tổng quan đơn hàng</Text>
                     <View style={tw`flex-row py-[6px] justify-between`}>
-                        <Text>Phí vận chuyển</Text>
-                        <Text>{formatToVND(order?.shippingCost)}</Text>
+                        <Text style={tw`text-[#333]`}>Phí vận chuyển</Text>
+                        <Text style={tw`text-[#333]`}>{formatToVND(order?.shippingCost)}</Text>
                     </View>
                     <View style={tw`flex-row py-[6px] justify-between`}>
                         <Text style={tw`font-bold text-[#333]`}>Tổng</Text>
                         <Text style={tw`font-bold text-[#333]`}>{formatToVND(order?.price)}</Text>
                     </View>
                 </View>
-                <View style={tw`px-[20px] py-[10px] bg-white mt-[10px]`}>
+                <View style={tw`px-[20px] py-[10px] bg-white mt-[10px] pb-[100px]`}>
                     <Text style={tw`font-bold text-[#333]`}>Chi tiết đơn hàng</Text>
                     <View style={tw`flex-row py-[6px] justify-between`}>
-                        <Text>Mã đơn hàng</Text>
-                        <Text>{order?._id}</Text>
+                        <Text style={tw`text-[#333]`}>Mã đơn hàng</Text>
+                        <Text style={tw`text-[#333]`}>{order?._id}</Text>
                     </View>
                     <View style={tw`flex-row py-[6px] justify-between`}>
-                        <Text>Ngày đặt hàng</Text>
-                        <Text>{order?.createdAt}</Text>
+                        <Text style={tw`text-[#333]`}>Ngày đặt hàng</Text>
+                        <Text style={tw`text-[#333]`}>{order?.createdAt}</Text>
                     </View>
                     <View style={tw`flex-row py-[6px] justify-between`}>
-                        <Text>Phương thức thanh toán</Text>
-                        <Text style={tw`w-[200px] text-right`}>{order?.payment_method}</Text>
+                        <Text style={tw`text-[#333]`}>Phương thức thanh toán</Text>
+                        <Text style={tw`w-[200px] text-right text-[#333]`}>{order?.payment_method}</Text>
                     </View>
                     <View style={tw`flex-row py-[6px] justify-between`}>
-                        <Text>Phương thức vận chuyển</Text>
-                        <Text>{order?.shipping_method}</Text>
+                        <Text style={tw`text-[#333]`}>Phương thức vận chuyển</Text>
+                        <Text style={tw`text-[#333]`}>{order?.shipping_method}</Text>
                     </View>
                     <View style={tw`flex-row py-[6px] justify-between items-center`}>
-                        <Text>Trạng thái</Text>
+                        <Text style={tw`text-[#333]`}>Trạng thái</Text>
                         <View
                             disabled={true}
                             style={[

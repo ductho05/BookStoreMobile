@@ -42,9 +42,7 @@ const CustomCountDown = ({ isDetail }) => {
     useEffect(() => {
         let countDownDate = null;
         countDownDate = new Date().setHours((Math.floor(currentHourInVietnam / 3) + 1) * 3, 0, 0);
-        console.log('countDownDate', countDownDate);
-        // new Date().setHours(17, new Date().getMinutes() + 1, 0);
-        // Cập nhật đồng hồ đếm ngược mỗi 1 giây
+
         const x1 = setInterval(() => {
             // Lấy thời gian hiện tại
             const now = new Date().getTime();

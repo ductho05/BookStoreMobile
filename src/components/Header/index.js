@@ -1,19 +1,23 @@
-import {View, Text, StatusBar, TouchableOpacity} from 'react-native';
+import { View, Text, StatusBar, TouchableOpacity } from 'react-native';
 import React from 'react';
 import tw from 'twrnc';
-import {PRIMARY_COLOR} from '../../styles/color.global';
+import { PRIMARY_COLOR } from '../../styles/color.global';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome5';
 
-const Header = ({title, navigation}) => {
+const Header = ({ title, navigation, isOrderSuccess }) => {
   const handleGoBack = () => {
-    navigation.goBack();
+    if (isOrderSuccess) {
+      navigation.navigate('TabBottom')
+    } else {
+      navigation.goBack();
+    }
   };
 
   return (
     <View
       style={[
         tw`w-full px-[20px] flex-row h-[50px] items-center mt-[${StatusBar.currentHeight}px]`,
-        {backgroundColor: PRIMARY_COLOR},
+        { backgroundColor: PRIMARY_COLOR },
       ]}>
       {navigation && (
         <TouchableOpacity

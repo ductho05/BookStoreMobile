@@ -36,33 +36,26 @@ import { useMemo } from 'react';
 import ItemFlatList from './ItemFlatList';
 
 const CustomFlatList = memo(({ allMyOrder, type }) => {
-  // const [users, setUsers] = useState([]);
   const { orientation } = useSelector(state => state.other);
   const [data, setData] = useState([]);
   const [isEnd, setIsEnd] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  // const pageRef = useRef(currentPage);
   const [isLoading, setIsLoading] = useState(false);
   const { loading, reloadData } = useSelector(state => state.data);
-  // const [completeLoading, setCompleteLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const { user, token } = useSelector(state => state.user);
   const dispatch = useDispatch();
-  const navigation = useNavigation();
-  const i = useRef(0);
   let completeLoading = false;
 
-  // console.log('loading CustomFlatList ', i.current++, allMyOrder);
-
   useEffect(() => {
-    // sau 15 giây sẽ tắt loading
+
     const timeout = setTimeout(() => {
       completeLoading = true;
-      // console.log('completeLoading');
+
     }, 15000);
 
     return () => {
-      // Xóa timeout khi component unmount
+
       clearTimeout(timeout);
     };
   }, []);
@@ -101,20 +94,16 @@ const CustomFlatList = memo(({ allMyOrder, type }) => {
   }, [reloadData]);
   const getUsers = async () => {
     setIsLoading(true);
-    //const allMyOrderNew = allMyOrder.slice(0, 10 * currentPage);
-    // console.log('currentPagene', currentPage, type);
+
     if (currentPage * 10 > allMyOrder.length) {
       if (type == 'Tất cả') {
         const response = await apiGetAllOrderForMe(
           currentPage.toString().padStart(2, '0') + token + user?._id,
         );
-        // setUsers([...users, ...response.data.data]);
+
         dispatch(getAllMyOrder([...allMyOrder, ...response?.data?.data]));
       } else if (type == '0') {
-        // console.log(
-        //   'test',
-        //   currentPage.toString().padStart(2, '0') + type + token + user?._id,
-        // );
+
         const response = await apiGetStatusOrderForMe(
           currentPage.toString().padStart(2, '0') + type + token + user?._id,
         );
@@ -140,9 +129,7 @@ const CustomFlatList = memo(({ allMyOrder, type }) => {
     setIsLoading(false);
   };
 
-  // console.log('allMyOrdernew', allMyOrder.length + ' ' + type);
 
-  // loading
   const fameLoading = index => {
     return (
       <View
@@ -223,12 +210,10 @@ const CustomFlatList = memo(({ allMyOrder, type }) => {
   useEffect(() => {
     currentPage > 1 && getUsers();
     !loading && setData(allMyOrder.slice(0, 10 * currentPage));
-    // console.log('currentPage', currentPage, allMyOrder.length);
+
     allMyOrder.length > 0 &&
       setIsEnd(currentPage * 10 - 10 > allMyOrder.length);
   }, [currentPage, loading]);
-
-  // isEnd && setIsLoading(false);
 
   return (
     <>
@@ -236,38 +221,26 @@ const CustomFlatList = memo(({ allMyOrder, type }) => {
       {!loading ? (
         // Nếu có đơn đặt hàng
         allMyOrder.length > 0 ? (
-          data.length > 0 ? (
-            <>
-              <FlatList
-                data={data}
-                renderItem={({ item, index }) => {
-                  return <ItemFlatList item={item} index={index} />;
-                }}
-                keyExtractor={item => item._id}
-                // extraData={currentPage}
-                ListFooterComponent={renderLoader}
-                onEndReached={!isEnd && loadMoreItem}
-                onEndReachedThreshold={0.3}
-                // removeClippedSubviews={true} // Bật cắt bỏ phần con không được hiển thị
-                removeClippedSubviews={true}
-                refreshControl={
-                  <RefreshControl
-                    refreshing={refreshing}
-                    onRefresh={onRefresh}
-                    colors={[PRIMARY_COLOR]}
-                  />
-                }
+          <FlatList
+            data={data}
+            renderItem={({ item, index }) => {
+              return <ItemFlatList item={item} index={index} />;
+            }}
+            keyExtractor={item => item._id}
+
+            ListFooterComponent={renderLoader}
+            onEndReached={!isEnd && loadMoreItem}
+            onEndReachedThreshold={0.3}
+            // removeClippedSubviews={true} // Bật cắt bỏ phần con không được hiển thị
+            removeClippedSubviews={true}
+            refreshControl={
+              <RefreshControl
+                refreshing={refreshing}
+                onRefresh={onRefresh}
+                colors={[PRIMARY_COLOR]}
               />
-            </>
-          ) : (
-            <View
-              style={tw`text-center text-[#666] ${orientation == `portrait`
-                  ? `pr-3 h-200 w-100 text-base`
-                  : `w-210 h-full text-base`
-                }`}>
-              {Array.from({ length: 5 }).map((_, index) => fameLoading(index))}
-            </View>
-          )
+            }
+          />
         ) : (
           // Nếu không có đơn đặt hàng nào
           <ScrollView

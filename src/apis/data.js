@@ -146,3 +146,12 @@ export const apiGetNotification = async (token, id) => {
     throw error;
   }
 }
+
+export const apiSendNotification = async (token, data) => {
+
+  try {
+    await getAuthInstance(token).post(`${API_URL}/webpush/send`, data)
+  } catch (error) {
+    console.log(error)
+  }
+}

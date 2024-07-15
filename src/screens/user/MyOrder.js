@@ -10,7 +10,7 @@ import {
   ScrollView,
   FlatList,
 } from 'react-native';
-import React from 'react';
+import React, { useCallback } from 'react';
 import { useState, useRef, useEffect } from 'react';
 import { Avatar, Icon, Image, Skeleton, Rating, ListItem } from '@rneui/themed';
 import tw from 'twrnc';
@@ -39,42 +39,44 @@ const MyOrder = ({ navigation }) => {
     completeMyOrder,
     cancelMyOrder,
   } = useSelector(state => state.data);
-  const data = [
+  const [data, setData] = useState()
 
-    {
-      title: `${Array.isArray(confirmMyOrder) ? `Chờ xác nhận (${confirmMyOrder?.length})` : 'Chờ xác nhận'}`,
-      icon: 'cube-outline',
-      content: <CustomFlatList allMyOrder={confirmMyOrder} type="0" />,
-    },
-    {
-      title: `${Array.isArray(deliveryMyOrder) ? `Đang giao (${deliveryMyOrder?.length})` : 'Đang giao'}`,
-      icon: 'airplane-outline',
-      content: <CustomFlatList allMyOrder={deliveryMyOrder} type="1" />,
-    },
-    {
-      title: `${Array.isArray(completeMyOrder) ? `Hoàn thành (${completeMyOrder?.length})` : 'Hoàn thành'}`,
-      icon: 'checkmark-circle-outline',
-      content: <CustomFlatList allMyOrder={completeMyOrder} type="2" />,
-    },
-    {
-      title: `${Array.isArray(cancelMyOrder) ? `Đã hủy (${cancelMyOrder?.length})` : 'Đã hủy'}`,
-      icon: 'close-circle-outline',
-      content: <CustomFlatList allMyOrder={cancelMyOrder} type="3" />,
-    },
-    {
-      title: `${Array.isArray(allMyOrder) ? `Tất cả (${allMyOrder?.length})` : 'Tất cả'}`,
-      icon: 'albums-outline',
-      content: <CustomFlatList allMyOrder={allMyOrder} type="Tất cả" />,
-    },
-  ];
-  // console.log('loading MyOrder ', i.current++);
+  useEffect(() => {
+    setData([
+      {
+        title: `${Array.isArray(confirmMyOrder) ? `Chờ xác nhận (${confirmMyOrder?.length})` : 'Chờ xác nhận'}`,
+        icon: 'cube-outline',
+        content: <CustomFlatList allMyOrder={Array.isArray(confirmMyOrder) ? confirmMyOrder : []} type="0" />,
+      },
+      {
+        title: `${Array.isArray(deliveryMyOrder) ? `Đang giao (${deliveryMyOrder?.length})` : 'Đang giao'}`,
+        icon: 'airplane-outline',
+        content: <CustomFlatList allMyOrder={Array.isArray(deliveryMyOrder) ? deliveryMyOrder : []} type="1" />,
+      },
+      {
+        title: `${Array.isArray(completeMyOrder) ? `Hoàn thành (${completeMyOrder?.length})` : 'Hoàn thành'}`,
+        icon: 'checkmark-circle-outline',
+        content: <CustomFlatList allMyOrder={Array.isArray(completeMyOrder) ? completeMyOrder : []} type="2" />,
+      },
+      {
+        title: `${Array.isArray(cancelMyOrder) ? `Đã hủy (${cancelMyOrder?.length})` : 'Đã hủy'}`,
+        icon: 'close-circle-outline',
+        content: <CustomFlatList allMyOrder={Array.isArray(cancelMyOrder) ? cancelMyOrder : []} type="3" />,
+      },
+      {
+        title: `${Array.isArray(allMyOrder) ? `Tất cả (${allMyOrder?.length})` : 'Tất cả'}`,
+        icon: 'albums-outline',
+        content: <CustomFlatList allMyOrder={Array.isArray(allMyOrder) ? allMyOrder : []} type="Tất cả" />,
+      },
+    ])
+  }, [allMyOrder, confirmMyOrder, deliveryMyOrder, completeMyOrder, cancelMyOrder])
 
   return (
     <View style={tw`flex-1`}>
       <View style={tw`flex-row justify-between items-center`}>
         <Header title="Đơn hàng của tôi" navigation={navigation} />
       </View>
-      <CustomTab data={data} />
+      {data && <CustomTab data={data} />}
     </View>
   );
 };

@@ -9,6 +9,8 @@ import { apiEvaluate, apiGetProductById } from '../../apis/product'
 import { updateLoadComment } from '../../stores/dataSlice'
 import Loading from '../../components/loaders/Loading'
 import { BORDER_COLOR } from '../../styles/color.global'
+import { appPath, evaluateImage } from '../../constants'
+import { apiSendNotification } from '../../apis/data'
 
 const EvaluateProduct = ({ route, navigation }) => {
     const { id, orderId } = route.params || null
@@ -42,6 +44,20 @@ const EvaluateProduct = ({ route, navigation }) => {
         setLoading(true)
         const response = await apiEvaluate(token, data)
         if (response.status === 200) {
+            const filter = 'admin'
+            const notification = {
+                title: 'Thông báo sản phẩm',
+                description: `Khách hàng ${user.fullName} vừa đánh giá sản phẩm ${product.title}`,
+                image: evaluateImage,
+                url: `${appPath}/product-detail/${product._id}`,
+                user: user._id,
+                largeImage: product.images,
+                linking: 'null'
+            }
+            await apiSendNotification(token, {
+                filter: filter,
+                notification: notification
+            })
             dispatch(updateLoadComment())
             Toast.show({
                 text1: 'Đánh giá sản phẩm thành công!',

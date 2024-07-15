@@ -6,11 +6,12 @@ import tw from 'twrnc'
 import Button from '../../components/Button/index'
 import { apiGetNotification } from '../../apis/data'
 import { getNotification } from '../../stores/dataSlice'
-import { useIsFocused } from '@react-navigation/native'
+import { useIsFocused, useLinkTo } from '@react-navigation/native'
 import { clearNumNotice } from '../../stores/userSlice'
 
 const Notification = ({ navigation }) => {
 
+    const linkTo = useLinkTo()
     const isFocused = useIsFocused()
     const dispatch = useDispatch()
     const { isLoggedIn, token, user } = useSelector(state => state.user)
@@ -28,6 +29,14 @@ const Notification = ({ navigation }) => {
         if (response.status === 200) {
             dispatch(getNotification(response.data.data))
         }
+    }
+
+    const handleToLink = (item) => {
+
+        if (item.notification.linking) {
+            linkTo('/product-detail/65646a7d1d2b3aa954b7d9f3')
+        }
+
     }
 
     React.useEffect(() => {
@@ -54,7 +63,7 @@ const Notification = ({ navigation }) => {
                     <ScrollView>
                         {
                             notifications.map(item => (
-                                <TouchableOpacity key={item._id} style={tw`p-[10px] ${item.isAccess ? "bg-white" : "bg-[#eee]"} mb-[10px] flex-row items-center`}>
+                                <TouchableOpacity onPress={() => handleToLink(item)} key={item._id} style={tw`p-[10px] ${item.isAccess ? "bg-white" : "bg-[#eee]"} mb-[10px] flex-row items-center`}>
                                     <Image
                                         style={tw`w-[50px] h-[50px]`}
                                         source={{ uri: item.notification.image }}
