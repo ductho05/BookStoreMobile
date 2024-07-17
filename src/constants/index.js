@@ -1,5 +1,5 @@
-const isDeploy = process.env.NODE_ENV === 'production';
-//const isDeploy = true;
+//const isDeploy = process.env.NODE_ENV === 'production';
+const isDeploy = true;
 
 const wifiPort = {
   teleWifi: "192.168.48.147",
