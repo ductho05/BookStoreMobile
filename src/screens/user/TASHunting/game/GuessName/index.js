@@ -31,13 +31,16 @@ import {
 import Toast from 'react-native-toast-message';
 import Swiper from 'react-native-swiper';
 import tw from 'twrnc';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector } from 'react-redux';
 import { BackgroundImage } from '@rneui/themed/dist/config';
 import {
   PRIMARY_COLOR,
   YELLOW_COLOR,
   GREEN_COLOR,
 } from '../../../../../styles/color.global';
+import { apiUpdateUser } from '../../../../../apis/user';
+import Loading from '../../../../../components/loaders/Loading';
+import { update } from '../../../../../stores/userSlice';
 const miniquestions = [
   {
     id: 1,
@@ -74,7 +77,7 @@ const imageMapping = [
   // Thêm các mục khác nếu cần thiết
 ];
 
-const bigquestions = [
+var bigquestions = [
   {
     id: 0,
     question: 'Đây là 1 con vật, bạn hãy đoán tên của nó là gì?',
@@ -167,7 +170,8 @@ const bigquestions = [
   },
 ];
 const GuessName = ({ navigation }) => {
-  const { user } = useSelector(state => state.user);
+  const dispatch = useDispatch()
+  const { user, token } = useSelector(state => state.user);
   const [boxes, setBoxes] = useState(Array.from({ length: 9 }, (_, i) => i + 1));
   const [scrore, setScrore] = useState(0);
   const [indexFocus, setIndexFocus] = useState(null);
@@ -177,9 +181,12 @@ const GuessName = ({ navigation }) => {
   const [appearedList, setAppearedList] = useState([]);
   const [chooseAnswer, setChooseAnswer] = useState(null);
   const [numQuestion, setNumQuestion] = useState(0);
+  const [isEndGame, setIsEndGame] = useState(false)
+  const [loading, setLoading] = useState(false)
   const randomBigQuestion = listQuestion => {
     const random = Math.floor(Math.random() * listQuestion.length);
-    return listQuestion[random];
+
+    return listQuestion[random]
   };
   const [bigQuestion, setBigQuestion] = useState(
     randomBigQuestion(bigquestions),
@@ -217,6 +224,7 @@ const GuessName = ({ navigation }) => {
       setIsTrueBigQuestion(false);
     }
     setModalVisible(true);
+
   };
 
   // thông báo
@@ -263,7 +271,71 @@ const GuessName = ({ navigation }) => {
     );
   };
 
+  const handlePlusPoint = async () => {
+    setLoading(true)
+    const caculatePoints = user?.point ? (user?.point + scrore) : scrore
+    const formData = new FormData()
+    formData.append("point", caculatePoints)
+    const response = await apiUpdateUser(formData, user._id, token)
+    if (response.status === 200) {
+      dispatch(update(response.data.data))
+    }
+    setLoading(false)
+    setIsEndGame(true)
+  }
+
+  const handleEndGame = () => {
+
+    setIsEndGame(false);
+    navigation.goBack()
+  }
+
   // console.log('miniQuestions', isTrueBigQuestion);
+
+  const contentEndGameModel = () => {
+    // console.log('contentPassModel');
+    return (
+      <View style={tw`flex-1 flex-col items-center justify-center`}>
+        <View style={[tw`w-90 h-[40%] items-center bg-white rounded`]}>
+          <LottieView
+            source={require(`../../../../../assets/jsons/congratulation.json`)}
+            autoPlay={true}
+            loop={false}
+            style={{ flexGrow: 1, width: '60%', marginBottom: 100 }}
+          />
+          <View
+            style={[
+              tw`text-2xl text-[#333]`,
+              {
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                bottom: 0,
+                justifyContent: 'center',
+                alignItems: 'center',
+              },
+            ]}>
+            <Text
+              style={tw`text-2xl text-[#333] mt-${isTrueBigQuestion ? '30' : '50'
+                } text-center px-5`}>{`Hoàn thành trò chơi, bạn được ${scrore} điểm`}
+            </Text>
+
+            <View
+              style={tw`flex-1.5 flex-row items-center justify-center px-5`}>
+              <Pressable
+                onPress={handleEndGame}
+                style={tw`flex-1 flex-row items-center justify-center bg-red-500 mr-1 rounded-lg
+          `}>
+                <Text style={tw`text-2xl text-white p-2`}>OK</Text>
+              </Pressable>
+            </View>
+          </View>
+        </View>
+      </View>
+    );
+  };
+
 
   const contentPassModel = () => {
     // console.log('contentPassModel');
@@ -304,7 +376,7 @@ const GuessName = ({ navigation }) => {
             <View
               style={tw`flex-1.5 flex-row items-center justify-center px-5`}>
               <Pressable
-                onPress={() => navigation.goBack()}
+                onPress={handleCancel}
                 style={tw`flex-1 flex-row items-center justify-center bg-red-500 mr-1 rounded-lg
           `}>
                 <Text style={tw`text-2xl text-white p-2`}>Thoát</Text>
@@ -322,14 +394,23 @@ const GuessName = ({ navigation }) => {
     );
   };
 
-  const handleContinue = () => {
-    setModalVisible(!modalVisible);
-    setBigQuestion(randomBigQuestion(bigquestions));
-    setIsTrueBigQuestion(null);
-    setChooseAnswer(null);
-    setNumQuestion(numQuestion + 1);
-    setBoxes(Array.from({ length: 9 }, (_, i) => i + 1));
+  const handleContinue = async () => {
+    if (numQuestion >= 9) {
+      setModalVisible(false)
+      await handlePlusPoint()
+    } else {
+      setModalVisible(!modalVisible);
+      setBigQuestion(randomBigQuestion(bigquestions));
+      setIsTrueBigQuestion(null);
+      setChooseAnswer(null);
+      setNumQuestion(numQuestion + 1);
+      setBoxes(Array.from({ length: 9 }, (_, i) => i + 1));
+    }
   };
+
+  const handleCancel = () => {
+    navigation.goBack()
+  }
 
   const contentMiniQuestionModel = () => {
     return (
@@ -386,10 +467,10 @@ const GuessName = ({ navigation }) => {
         onPress={() => handleBigAnswer(index, item.isTrue)}
         key={index}
         style={tw`flex-1 flex-row items-center justify-start bg-[${chooseAnswer != index
-            ? YELLOW_COLOR
-            : item.isTrue
-              ? GREEN_COLOR
-              : PRIMARY_COLOR
+          ? YELLOW_COLOR
+          : item.isTrue
+            ? GREEN_COLOR
+            : PRIMARY_COLOR
           }] rounded-xl rounded-xl border border-yellow-800  my-2 shadow-lg`}>
         <Text style={tw`text-3xl text-black ml-5`}>
           {(index == 0 ? 'A. ' : index == 1 ? 'B. ' : 'C. ') + item.answer}
@@ -468,7 +549,30 @@ const GuessName = ({ navigation }) => {
       // hidden={true}
       />
       <ModalCustom />
-
+      {loading && <Loading />}
+      <Modal
+        animationType="slide"
+        transparent={true}
+        visible={isEndGame}
+        onRequestClose={() => {
+          navigation.goBack();
+        }}>
+        <View
+          style={{
+            flex: 1,
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            bottom: 0,
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: 'black',
+            opacity: 0.6,
+          }}
+        />
+        {contentEndGameModel()}
+      </Modal>
       <View style={tw`flex-1 flex-col`}>
         <View style={tw`flex-1.5 flex-row items-center justify-between`}>
           <View style={tw`flex-1 flex-row items-center justify-between`}>

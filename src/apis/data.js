@@ -155,3 +155,14 @@ export const apiSendNotification = async (token, data) => {
     console.log(error)
   }
 }
+
+export const apiCreateVoucher = async (data) => {
+
+  try {
+    const response = await axios.post(`${API_URL}/vouchers/user/add`, data)
+
+    return response
+  } catch (error) {
+    console.log(error)
+  }
+}

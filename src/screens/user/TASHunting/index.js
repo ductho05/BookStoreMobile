@@ -9,8 +9,8 @@ import {
   Touchable,
   ImageBackground,
 } from 'react-native';
-import React, {memo, useRef} from 'react';
-import {useState, useEffect} from 'react';
+import React, { memo, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import * as Animatable from 'react-native-animatable';
 import {
   Avatar,
@@ -26,24 +26,24 @@ import Swiper from 'react-native-swiper';
 import tw from 'twrnc';
 import Header from '../../../components/Header/index';
 import SwipeToDeleteEditItem from '../../../components/SwipeToDeleteEditItem/index';
-import {PRIMARY_COLOR} from '../../../styles/color.global';
+import { PRIMARY_COLOR } from '../../../styles/color.global';
 import Button from '../../../components/Button/index';
-import {useSelector, useDispatch} from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 
-import {StyleSheet} from 'react-native';
-import {YELLOW_COLOR} from '../../../styles/color.global';
-import {color} from '@rneui/themed/dist/config';
-import {apiDeleteFavorites, apiGetFavoritesForMe} from '../../../apis/data';
-import {getFavorites} from '../../../stores/dataSlice';
+import { StyleSheet } from 'react-native';
+import { YELLOW_COLOR } from '../../../styles/color.global';
+import { color } from '@rneui/themed/dist/config';
+import { apiDeleteFavorites, apiGetFavoritesForMe } from '../../../apis/data';
+import { getFavorites } from '../../../stores/dataSlice';
 import CustomDialog from '../../../components/CustomDialog';
-import {getAddressDelivery} from '../../../stores/otherSlice';
+import { getAddressDelivery } from '../../../stores/otherSlice';
 import IconFontAwesome from 'react-native-vector-icons/FontAwesome';
-const TASHunting = ({navigation}) => {
-  const {user, token, isLoggedIn} = useSelector(state => state.user);
+const TASHunting = ({ navigation }) => {
+  const { user, token, isLoggedIn } = useSelector(state => state.user);
   const [completeLoading, setCompleteLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [isdeleting, setIsdeleting] = useState(false);
-  const {addressDelivery, orientation} = useSelector(state => state.other);
+  const { addressDelivery, orientation } = useSelector(state => state.other);
   const [deleteItem, setDeleteItem] = useState(null);
 
   const dispatch = useDispatch();
@@ -81,8 +81,8 @@ const TASHunting = ({navigation}) => {
       getAddressDelivery(
         addressDelivery.map(data => {
           return data.id == item.id
-            ? {...data, selected: !data.selected}
-            : {...data, selected: false};
+            ? { ...data, selected: !data.selected }
+            : { ...data, selected: false };
         }),
       ),
     );
@@ -132,7 +132,7 @@ const TASHunting = ({navigation}) => {
     // },
   ];
 
-  const ItemSwiper = ({item}) => {
+  const ItemSwiper = ({ item }) => {
     return (
       <View style={tw`w-full h-[180px] z-2 items-center`}>
         <ImageBackground
@@ -147,19 +147,19 @@ const TASHunting = ({navigation}) => {
           <View style={tw`flex-1`}>
             <Text
               numberOfLines={3}
-              style={[tw`font-bold`, {color: YELLOW_COLOR}]}>
+              style={[tw`font-bold`, { color: YELLOW_COLOR }]}>
               {item.title}
             </Text>
             <TouchableOpacity>
               <View
                 style={[
                   tw`w-[90px] flex-row items-center px-[10px] mt-[10px] rounded-[12px] py-[6px] border`,
-                  {borderColor: YELLOW_COLOR},
+                  { borderColor: YELLOW_COLOR },
                 ]}>
                 <Text
                   style={[
                     tw`font-bold mr-[8px] text-[12px]`,
-                    {color: YELLOW_COLOR},
+                    { color: YELLOW_COLOR },
                   ]}>
                   Xem thêm
                 </Text>
@@ -204,19 +204,19 @@ const TASHunting = ({navigation}) => {
       id: 2,
       title: 'T or F',
       images: require(`../../../assets/images/items/cups/gift_01.jpg`),
-      onPress: () => navigation.navigate('GuessTheName'),
+      onPress: () => navigation.navigate('GuessName'),
     },
     {
       id: 3,
       title: 'T or F',
       images: require(`../../../assets/images/items/cups/gift_01.jpg`),
-      onPress: () => navigation.navigate('GuessTheName'),
+      onPress: () => navigation.navigate('GuessName'),
     },
     {
       id: 4,
       title: 'T or F',
       images: require(`../../../assets/images/items/cups/gift_01.jpg`),
-      onPress: () => navigation.navigate('GuessTheName'),
+      onPress: () => navigation.navigate('GuessName'),
     },
   ];
 
@@ -250,7 +250,7 @@ const TASHunting = ({navigation}) => {
           <Avatar
             size={64}
             rounded
-            source={user.images ? {uri: user.images} : {}}
+            source={user.images ? { uri: user.images } : {}}
           />
           <View style={tw`flex-col ml-2 justify-start items-start`}>
             <Text style={tw`font-bold mb-1 text-[#333] text-xl`}>
@@ -261,7 +261,7 @@ const TASHunting = ({navigation}) => {
                 Thành tích:
               </Text>
               <Text style={tw`font-bold text-[${YELLOW_COLOR}] text-xl`}>
-                100
+                {user?.point ? user?.point : 0}
               </Text>
               <Image
                 source={require(`../../../assets/images/items/cups/tasCoin.jpg`)}
@@ -331,7 +331,7 @@ const TASHunting = ({navigation}) => {
               shadowRadius: 6,
               elevation: 7, // This line is for Android
             }}>
-            <Text style={{color: 'white', fontWeight: 'bold', fontSize: 14}}>
+            <Text style={{ color: 'white', fontWeight: 'bold', fontSize: 14 }}>
               Thực hiện
             </Text>
           </TouchableOpacity>
@@ -386,7 +386,7 @@ const TASHunting = ({navigation}) => {
         {/* thông tin cá nhân */}
         <InfoUser />
         {/* khung nhiệm vụ */}
-        <DailyTask />
+        {/* <DailyTask /> */}
 
         <View style={tw`flex-col flex-1 bg-blue-100`}>
           <Text style={tw`font-bold text-[#333]  text-xl mx-5 my-4`}>
@@ -419,7 +419,7 @@ const TASHunting = ({navigation}) => {
   };
 
   return (
-    <View style={tw`flex-col flex-1`}>
+    <View style={tw`flex-col flex-1 bg-white`}>
       <Header title={'Săn điểm TAS'} navigation={navigation} />
       <ScrollView style={tw`flex-1  flex-col`}>
         <View style={tw`flex-col h-72 bg-blue-100`}>

@@ -1,5 +1,5 @@
 //const isDeploy = process.env.NODE_ENV === 'production';
-const isDeploy = false;
+const isDeploy = true;
 
 export const API_URL =
   isDeploy === true

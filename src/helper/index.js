@@ -34,3 +34,23 @@ export const checkExpried = (date) => {
 export const checkValueInArray = (array, value) => {
     return array.includes(value)
 }
+
+export const generateVoucherCode = () => {
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+    let voucherCode = '';
+    for (let i = 0; i < 8; i++) {
+        voucherCode += characters.charAt(Math.floor(Math.random() * characters.length));
+    }
+    return voucherCode;
+}
+
+export const get7DaysLater = () => {
+    const today = new Date();
+    const sevenDaysLater = new Date(today.getTime() + (7 * 24 * 60 * 60 * 1000));
+
+    const year = sevenDaysLater.getFullYear();
+    const month = String(sevenDaysLater.getMonth() + 1).padStart(2, '0');
+    const day = String(sevenDaysLater.getDate()).padStart(2, '0');
+
+    return `${year}-${month}-${day}`;
+}

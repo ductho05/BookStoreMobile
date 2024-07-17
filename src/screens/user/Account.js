@@ -15,11 +15,14 @@ import { useSelector, useDispatch } from 'react-redux';
 import { logout } from '../../stores/userSlice';
 import Toast from 'react-native-toast-message';
 import Timeline from '../../components/TimeLine';
+import { YELLOW_COLOR } from '../../styles/color.global';
+import Loading from '../../components/loaders/Loading';
 // import {useNavigation} from '@react-navigation/native';
 
 const Account = ({ navigation }) => {
     const { user, isLoggedIn } = useSelector(state => state.user);
     // const navigation = useNavigation();
+    const [loading, setLoading] = useState(false)
     const dispatch = useDispatch();
     // Check hướng điện thoại
     const { orientation } = useSelector(state => state.other);
@@ -93,7 +96,7 @@ const Account = ({ navigation }) => {
 
     // screen khi da dang nhap
     const screenWhenLoggedIn = () => {
-        const point = 100;
+        const point = user?.point ? user?.point : 0;
         return (
             <View
                 style={tw`flex-1 flex-${orientation == 'portrait' ? 'col' : 'row'
@@ -128,7 +131,7 @@ const Account = ({ navigation }) => {
                         <View
                             style={tw`flex flex-row  ${orientation != 'portrait' ? 'justify-evenly' : 'justify-between'
                                 } items-center w-full`}>
-                            <Text style={tw`text-xl font-bold text-[#333]`}> {point} TAS</Text>
+                            <Text style={tw`text-xl font-bold text-[${YELLOW_COLOR}]`}> {point} TAS</Text>
                             <TouchableOpacity
                                 onPress={() => {
                                     handleLogout();
@@ -217,7 +220,7 @@ const Account = ({ navigation }) => {
                                     </ListItem>
                                 </View>
                                 <View style={tw`flex-6 flex-col justify-between items-center`}>
-                                    <Timeline point={point} />
+                                    <Timeline point={point} setLoading={setLoading} />
                                 </View>
                             </View>
                         </View>
@@ -298,6 +301,7 @@ const Account = ({ navigation }) => {
     return (
         <View style={tw`flex-1`}>
             <Header title="Thông tin tài khoản" />
+            {loading && <Loading />}
             {isLoggedIn ? screenWhenLoggedIn() : screenWhenLoggedOut()}
         </View>
     );
