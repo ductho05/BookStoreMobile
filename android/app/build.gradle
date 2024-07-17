@@ -80,6 +80,12 @@ android {
     // buildFeatures {
     //     buildConfig true
     // }
+
+    // compileOptions {
+    //     sourceCompatibility JavaVersion.VERSION_1_19
+    //     targetCompatibility JavaVersion.VERSION_1_19
+    // }
+
     namespace "com.tabookstore"
     defaultConfig {
         applicationId "com.tabookstore"

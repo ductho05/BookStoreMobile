@@ -21,7 +21,7 @@ import {useSelector, useDispatch} from 'react-redux';
 import {PRIMARY_COLOR} from '../../styles/color.global';
 import {useRoute} from '@react-navigation/native';
 // import Keyboard from 'react-native-keyboard';
-import MapView from 'react-native-maps';
+// import MapView from 'react-native-maps';
 import {StyleSheet} from 'react-native';
 const AddDeliveryAddress = ({navigation}) => {
   const {orientation, addressDelivery} = useSelector(state => state.other);
